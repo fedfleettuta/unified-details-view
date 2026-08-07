@@ -22,6 +22,23 @@ Origin / Renewal history / Audit history (only when relevant)
 - Details grid stops being a flat 3-column dump of 15 fields — fields group under quiet section labels (Identity, Costs, Dates, Documents, Notes).
 - Empty fields render as a consistent muted em dash, and a "Show empty fields" toggle hides them by default so pages read as dense and intentional rather than half-blank.
 
+## Layout freedom
+
+Since restructuring is open, the template also reorganises the page rather than
+just deleting cards:
+
+- Two-column working layout on desktop: the main column carries Details and the
+  record-specific sections; a narrower right rail carries the at-a-glance summary
+  (status, key dates, cost total), documents, and actions. Single column on mobile,
+  rail moving above Details.
+- Documents (licence, invoice, receipt, photo, fine notice) are pulled out of the
+  field grid into one "Documents" block in the rail so every page handles
+  attachments the same way.
+- History and audit sections become a single shared "Activity" block at the bottom,
+  switching between table and timeline presentation based on the record type.
+- The vehicle context (FED-003 · Toyota Hiace) becomes one compact linked chip in
+  the header instead of appearing in the subtitle, a stat card, and the field grid.
+
 ## The five pages
 
 Licence & Policy, Assets, Fines, Fuel, Maintenance. Each one is just a config object (title, status, meta strip fields, field groups, extra sections) plus demo data — no bespoke page code. Adding a sixth record type later is a config entry, not a new page.
