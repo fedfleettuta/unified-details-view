@@ -46,7 +46,7 @@ function Index() {
       <header className="max-w-2xl space-y-4">
         <p className="label-micro">Design system · detail pages</p>
         <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-          One detail template, five record types
+          One detail template, seven record types
         </h1>
         <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
           Every page below is the same component tree driven by a record config. Nothing is shown
@@ -72,7 +72,9 @@ function Index() {
                   {record.typeLabel}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {record.vehicle.reg} · {record.vehicle.model}
+                  {record.vehicle
+                    ? `${record.vehicle.reg} · ${record.vehicle.model}`
+                    : record.crumb}
                 </p>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
                   Open detail page

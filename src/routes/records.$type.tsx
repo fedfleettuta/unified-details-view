@@ -16,7 +16,7 @@ export const Route = createFileRoute("/records/$type")({
       };
     }
     const { record } = loaderData;
-    const title = `${record.typeLabel} — ${record.vehicle.reg} · Fleet Detail Kit`;
+    const title = `${record.typeLabel} — ${record.vehicle?.reg ?? record.crumb} · Fleet Detail Kit`;
     return {
       meta: [
         { title },

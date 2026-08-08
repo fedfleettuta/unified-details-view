@@ -38,11 +38,13 @@ export function RecordHeader({ record, actions }: { record: RecordConfig; action
             ) : null}
           </div>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-2.5 py-1 text-xs font-medium text-foreground">
-              <Truck className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
-              {record.vehicle.reg}
-              <span className="text-muted-foreground">· {record.vehicle.model}</span>
-            </span>
+            {record.vehicle ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-2.5 py-1 text-xs font-medium text-foreground">
+                <Truck className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
+                {record.vehicle.reg}
+                <span className="text-muted-foreground">· {record.vehicle.model}</span>
+              </span>
+            ) : null}
             <span className="min-w-0">{record.headline}</span>
           </div>
         </div>

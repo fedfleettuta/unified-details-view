@@ -58,7 +58,7 @@ export interface RecordConfig {
   reference?: string;
   crumb: string;
   status: { label: string; tone: StatusTone };
-  vehicle: { reg: string; model: string };
+  vehicle?: { reg: string; model: string };
   headline: string;
   summary: SummaryItem[];
   groups: RecordFieldGroup[];
@@ -72,6 +72,153 @@ export interface RecordConfig {
 const VEHICLE = { reg: "FED-003", model: "Toyota Hiace" };
 
 export const records: RecordConfig[] = [
+  {
+    slug: "vehicle",
+    listName: "Vehicles",
+    listPlural: "Vehicles",
+    typeLabel: "Vehicle",
+    title: "FED-003",
+    reference: "VIN JTFR12P900123456",
+    crumb: "FED-003",
+    status: { label: "Active", tone: "active" },
+    headline: "Toyota Hiace · 2019 diesel panel van · assigned to AA AA",
+    summary: [
+      { label: "Odometer", value: "148,210 km", kind: "number" },
+      { label: "Next service", value: "Sep 12, 2026", kind: "date" },
+      { label: "Licence expiry", value: "Aug 8, 2026", kind: "date", tone: "warning" },
+      { label: "Assigned driver", value: "AA AA" },
+    ],
+    groups: [
+      {
+        title: "Identity",
+        fields: [
+          { label: "Registration", value: "FED-003", kind: "mono" },
+          { label: "Make", value: "Toyota" },
+          { label: "Model", value: "Hiace" },
+          { label: "Year", value: "2019", kind: "number" },
+          { label: "VIN", value: "JTFR12P900123456", kind: "mono" },
+          { label: "Body type", value: "Panel van" },
+        ],
+      },
+      {
+        title: "Specification",
+        fields: [
+          { label: "Fuel type", value: "Diesel" },
+          { label: "Engine size", value: "2.8 L" },
+          { label: "Transmission", value: null },
+          { label: "Seats", value: "3", kind: "number" },
+          { label: "Gross weight", value: null },
+          { label: "Colour", value: "White" },
+        ],
+      },
+      {
+        title: "Ownership",
+        fields: [
+          { label: "Owner", value: "Fleetguard Ltd" },
+          { label: "Acquired on", value: "Mar 14, 2022", kind: "date" },
+          { label: "Purchase cost", value: "€24,500.00", kind: "money" },
+          { label: "Finance agreement", value: null, kind: "mono" },
+          { label: "Depot", value: "Marsa yard" },
+          { label: "Notes", value: null },
+        ],
+      },
+    ],
+    documents: [
+      { label: "Registration document", name: "vrt-fed003.pdf" },
+      { label: "Insurance certificate", name: null },
+      { label: "Vehicle photo", name: "fed003-front.jpg" },
+    ],
+    activity: {
+      kind: "timeline",
+      title: "Audit history",
+      items: [
+        {
+          title: "Sent for repair",
+          meta: "by admin@fleetguard.com · Aug 5, 2026 at 8:02 AM",
+          transition: "Active → In workshop",
+        },
+        {
+          title: "Driver assigned",
+          meta: "by admin@fleetguard.com · Feb 9, 2026 at 10:15 AM",
+          transition: "Unassigned → AA AA",
+        },
+      ],
+    },
+    primaryAction: "Edit vehicle",
+    description:
+      "Fleet vehicle record with identity, specification, ownership and audit trail on the shared detail template.",
+  },
+  {
+    slug: "driver",
+    listName: "Drivers",
+    listPlural: "Drivers",
+    typeLabel: "Driver",
+    title: "AA AA",
+    reference: "FED001",
+    crumb: "AA AA",
+    status: { label: "Enabled", tone: "active" },
+    vehicle: VEHICLE,
+    headline: "Licence CE valid to Oct 31, 2026 · CPC valid",
+    summary: [
+      { label: "Licence number", value: "MT-675576675", kind: "mono" },
+      { label: "Licence expiry", value: "Oct 31, 2026", kind: "date" },
+      { label: "CPC expiry", value: "Mar 26, 2027", kind: "date" },
+      { label: "CPC valid", value: "Yes", tone: "active" },
+    ],
+    groups: [
+      {
+        title: "Identity",
+        fields: [
+          { label: "Name", value: "AA AA" },
+          { label: "Employee #", value: "FED001", kind: "mono" },
+          { label: "Mobile", value: null },
+          { label: "Email", value: "aa@fleetguard.com" },
+        ],
+      },
+      {
+        title: "Licence",
+        fields: [
+          { label: "Licence type", value: "Local" },
+          { label: "Licence category", value: "CE" },
+          { label: "Licence number", value: "MT-675576675", kind: "mono" },
+          { label: "Licence expiry date", value: "Oct 31, 2026", kind: "date" },
+          { label: "CPC valid", value: "Yes" },
+          { label: "CPC expiry date", value: "Mar 26, 2027", kind: "date" },
+        ],
+      },
+      {
+        title: "Employment",
+        fields: [
+          { label: "Depot", value: "Marsa yard" },
+          { label: "Start date", value: "Jan 8, 2024", kind: "date" },
+          { label: "Notes", value: null },
+        ],
+      },
+    ],
+    documents: [
+      { label: "Licence photo", name: "licence-fed001.jpg" },
+      { label: "CPC card", name: null },
+    ],
+    activity: {
+      kind: "timeline",
+      title: "Audit history",
+      items: [
+        {
+          title: "Licence renewed",
+          meta: "by admin@fleetguard.com · Nov 2, 2025 at 11:31 AM",
+          transition: "Expiry 31/10/2025 → 31/10/2026",
+        },
+        {
+          title: "Driver enabled",
+          meta: "by admin@fleetguard.com · Jan 8, 2024 at 9:00 AM",
+          transition: "Disabled → Enabled",
+        },
+      ],
+    },
+    primaryAction: "Edit driver",
+    description:
+      "Driver record with identity, licence, CPC and employment details on the shared detail template.",
+  },
   {
     slug: "licence-policy",
     listName: "Licence & Policy",
