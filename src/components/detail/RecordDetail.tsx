@@ -5,6 +5,10 @@ import { DetailsPanel } from "./DetailsPanel";
 import { SummaryRail } from "./SummaryRail";
 import { ActivityBlock } from "./ActivityBlock";
 import { Panel } from "./Panel";
+import { Spotlight } from "./Spotlight";
+import { MetricStrip } from "./MetricStrip";
+import { ComplianceStrip } from "./ComplianceStrip";
+import { RelatedLists } from "./RelatedLists";
 import { Button } from "@/components/ui/button";
 import type { RecordConfig } from "@/data/records";
 
@@ -31,6 +35,8 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
         <div className="order-2 space-y-5 lg:order-1">
+          {record.spotlight ? <Spotlight spotlight={record.spotlight} /> : null}
+
           {record.origin ? (
             <Panel className="border-l-2 border-l-primary">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
@@ -58,11 +64,18 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
 
           <DetailsPanel groups={record.groups} />
 
+          {record.metrics ? <MetricStrip metrics={record.metrics} /> : null}
+
+          {record.related ? <RelatedLists lists={record.related} /> : null}
+
           {record.activity ? <ActivityBlock activity={record.activity} /> : null}
         </div>
 
         <aside className="order-1 lg:sticky lg:top-8 lg:order-2">
-          <SummaryRail summary={record.summary} documents={record.documents} />
+          <div className="space-y-5">
+            <SummaryRail summary={record.summary} documents={record.documents} />
+            {record.compliance ? <ComplianceStrip items={record.compliance} /> : null}
+          </div>
         </aside>
       </div>
     </div>
