@@ -72,7 +72,9 @@ function Index() {
                   {record.typeLabel}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {record.vehicle.reg} · {record.vehicle.model}
+                  {record.vehicle
+                    ? `${record.vehicle.reg} · ${record.vehicle.model}`
+                    : record.crumb}
                 </p>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
                   Open detail page
