@@ -47,6 +47,37 @@ export interface RecordOrigin {
   actionLabel: string;
 }
 
+export interface RecordSpotlight {
+  eyebrow: string;
+  title: string;
+  tone?: StatusTone;
+  stateLabel?: string;
+  items: SummaryItem[];
+  actionLabel?: string;
+}
+
+export interface RecordMetrics {
+  title: string;
+  note?: string;
+  items: SummaryItem[];
+}
+
+export interface ComplianceItem {
+  label: string;
+  value: string;
+  meta: string;
+  tone: StatusTone;
+}
+
+export interface RelatedList {
+  title: string;
+  countLabel?: string;
+  columns: string[];
+  rows: Array<Array<{ text: string; tone?: StatusTone; kind?: FieldKind }>>;
+  linkLabel: string;
+  emptyLabel?: string;
+}
+
 export interface RecordConfig {
   slug: string;
   /** Name of the list page this record belongs to. */
@@ -64,6 +95,10 @@ export interface RecordConfig {
   groups: RecordFieldGroup[];
   documents: RecordDocument[];
   origin?: RecordOrigin;
+  spotlight?: RecordSpotlight;
+  metrics?: RecordMetrics;
+  compliance?: ComplianceItem[];
+  related?: RelatedList[];
   activity?: RecordActivity;
   primaryAction?: string;
   description: string;
