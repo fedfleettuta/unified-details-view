@@ -20,9 +20,11 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
                 {record.primaryAction}
               </Button>
             ) : null}
-            <Button size="sm" variant="outline">
-              View vehicle
-            </Button>
+            {record.vehicle ? (
+              <Button size="sm" variant="outline">
+                View vehicle
+              </Button>
+            ) : null}
           </>
         }
       />
