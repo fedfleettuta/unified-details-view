@@ -58,7 +58,7 @@ export interface RecordConfig {
   reference?: string;
   crumb: string;
   status: { label: string; tone: StatusTone };
-  vehicle: { reg: string; model: string };
+  vehicle?: { reg: string; model: string };
   headline: string;
   summary: SummaryItem[];
   groups: RecordFieldGroup[];
