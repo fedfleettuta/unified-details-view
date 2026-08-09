@@ -825,6 +825,213 @@ export const records: RecordConfig[] = [
     description:
       "Workshop job record with schedule, invoicing and audit trail on the shared detail template.",
   },
+  {
+    slug: "damage",
+    listName: "Damages",
+    listPlural: "Damages",
+    typeLabel: "Damage",
+    title: "Scratch — front bumper (left)",
+    reference: "DMG-4471",
+    crumb: "DMG-4471",
+    status: { label: "Approved", tone: "active" },
+    vehicle: VEHICLE,
+    headline: "Reported by AA AA on Aug 7, 2026 during the return inspection",
+    summary: [
+      { label: "Damage type", value: "Scratch" },
+      { label: "Position", value: "Front bumper — left" },
+      { label: "Reported", value: "Aug 7, 2026 · 17:05", kind: "date" },
+      { label: "Reported by", value: "AA AA" },
+      { label: "Approval", value: "Approved", tone: "active" },
+      { label: "Repair status", value: "Being repaired", tone: "info" },
+      { label: "Estimated cost", value: "€180.00", kind: "money" },
+    ],
+    groups: [
+      {
+        title: "Damage",
+        fields: [
+          { label: "Damage type", value: "Scratch" },
+          { label: "Area", value: "Exterior — front" },
+          { label: "Position", value: "Front bumper — left" },
+          { label: "Severity", value: "Minor" },
+          { label: "Size", value: "12 cm" },
+          { label: "Pre-existing", value: "No" },
+        ],
+      },
+      {
+        title: "Reporting",
+        fields: [
+          { label: "Reported by", value: "AA AA" },
+          { label: "Inspection", value: "Return inspection" },
+          { label: "Reported at", value: "Aug 7, 2026 · 17:05", kind: "date" },
+          { label: "Odometer", value: "148,210 km", kind: "number" },
+          { label: "Driver notes", value: "Contact while reversing at the Marsa gate." },
+          { label: "Depot", value: "Marsa yard" },
+        ],
+      },
+      {
+        title: "Assessment",
+        fields: [
+          { label: "Approved by", value: "admin@fleetguard.com" },
+          { label: "Approved at", value: "Aug 7, 2026 · 17:41", kind: "date" },
+          { label: "Liability", value: "Driver" },
+          { label: "Insurance claim", value: null, kind: "mono" },
+          { label: "Estimated cost", value: "€180.00", kind: "money" },
+          { label: "Assessor notes", value: null },
+        ],
+      },
+    ],
+    documents: [
+      { label: "Damage photo", name: "dmg-4471-bumper.jpg" },
+      { label: "Close-up photo", name: "dmg-4471-detail.jpg" },
+      { label: "Assessment report", name: null },
+    ],
+    origin: {
+      eyebrow: "Origin · session return inspection",
+      title: "Session SES-1182 · FED-003 · AA AA",
+      lines: ["Started Aug 7, 07:31 · Returned Aug 7, 17:05", "Damage first recorded at return"],
+      actionLabel: "View session",
+    },
+    related: [
+      {
+        title: "Linked repair",
+        countLabel: "1 job",
+        columns: ["Job", "Supplier", "Status", "Scheduled", "Cost"],
+        rows: [
+          [
+            { text: "RPR-0912", kind: "mono" },
+            { text: "Bodyworks Ltd" },
+            { text: "Being repaired", tone: "info" },
+            { text: "Aug 9, 2026", kind: "date" },
+            { text: "€180.00", kind: "money" },
+          ],
+        ],
+        linkLabel: "Open repair job",
+      },
+    ],
+    activity: {
+      kind: "timeline",
+      title: "Audit history",
+      items: [
+        {
+          title: "Sent to workshop",
+          meta: "by admin@fleetguard.com · Aug 8, 2026 at 9:14 AM",
+          transition: "To repair → Being repaired",
+        },
+        {
+          title: "Damage approved",
+          meta: "by admin@fleetguard.com · Aug 7, 2026 at 5:41 PM",
+          transition: "Pending → Approved",
+        },
+        {
+          title: "Damage reported",
+          meta: "by AA AA · Aug 7, 2026 at 5:05 PM",
+          transition: "Return inspection",
+        },
+      ],
+    },
+    primaryAction: "Create repair job",
+    description:
+      "Vehicle damage record with position, severity, reporting session, assessment and linked repair on the shared detail template.",
+  },
+  {
+    slug: "repair",
+    listName: "Repairs",
+    listPlural: "Repairs",
+    typeLabel: "Repair",
+    title: "Front bumper respray",
+    reference: "RPR-0912",
+    crumb: "RPR-0912",
+    status: { label: "Being repaired", tone: "info" },
+    vehicle: VEHICLE,
+    headline: "Bodyworks Ltd · dropped off Aug 9, 2026 · no pickup date confirmed",
+    summary: [
+      { label: "Supplier", value: "Bodyworks Ltd" },
+      { label: "Repair status", value: "Being repaired", tone: "info" },
+      { label: "Drop-off", value: "Aug 9, 2026", kind: "date" },
+      { label: "Expected pickup", value: "Aug 12, 2026", kind: "date" },
+      { label: "Quoted", value: "€180.00", kind: "money" },
+      { label: "Invoiced", value: "—", kind: "money" },
+      { label: "Vehicle off road", value: "3 days", tone: "warning" },
+    ],
+    groups: [
+      {
+        title: "Job",
+        fields: [
+          { label: "Work category", value: "Bodywork" },
+          { label: "Supplier", value: "Bodyworks Ltd" },
+          { label: "Description", value: "Respray front bumper following approved damage DMG-4471." },
+          { label: "Assigned to", value: "admin@fleetguard.com" },
+        ],
+      },
+      {
+        title: "Schedule",
+        fields: [
+          { label: "Drop-off date", value: "Aug 9, 2026", kind: "date" },
+          { label: "Expected pickup date", value: "Aug 12, 2026", kind: "date" },
+          { label: "Actual pickup date", value: null, kind: "date" },
+          { label: "Odometer at drop-off", value: "148,392 km", kind: "number" },
+        ],
+      },
+      {
+        title: "Costs & invoicing",
+        fields: [
+          { label: "Quoted cost", value: "€180.00", kind: "money" },
+          { label: "Final cost", value: null, kind: "money" },
+          { label: "Invoice number", value: null, kind: "mono" },
+          { label: "Invoice date", value: null, kind: "date" },
+          { label: "Recharged to driver", value: "No" },
+          { label: "Notes", value: null },
+        ],
+      },
+    ],
+    documents: [
+      { label: "Quotation", name: "quote-bodyworks-0912.pdf" },
+      { label: "Invoice document", name: null },
+      { label: "Before photo", name: "dmg-4471-bumper.jpg" },
+    ],
+    origin: {
+      eyebrow: "Origin · approved damage",
+      title: "DMG-4471 · Scratch — front bumper (left)",
+      lines: ["Reported by AA AA on Aug 7, 2026", "Approved Aug 7, 2026 · liability: driver"],
+      actionLabel: "View damage",
+    },
+    related: [
+      {
+        title: "Damages covered",
+        countLabel: "1 damage",
+        columns: ["Damage", "Position", "Reported", "Approval", "Estimate"],
+        rows: [
+          [
+            { text: "Scratch" },
+            { text: "Front bumper — left" },
+            { text: "Aug 7, 2026", kind: "date" },
+            { text: "Approved", tone: "active" },
+            { text: "€180.00", kind: "money" },
+          ],
+        ],
+        linkLabel: "All damages for FED-003",
+      },
+    ],
+    activity: {
+      kind: "timeline",
+      title: "Audit history",
+      items: [
+        {
+          title: "Repair started",
+          meta: "by admin@fleetguard.com · Aug 9, 2026 at 8:22 AM",
+          transition: "Scheduled → Being repaired",
+        },
+        {
+          title: "Repair scheduled",
+          meta: "by admin@fleetguard.com · Aug 8, 2026 at 9:14 AM",
+          transition: "To repair → Scheduled",
+        },
+      ],
+    },
+    primaryAction: "Mark repaired",
+    description:
+      "Repair job record with supplier, schedule, costs, source damage and audit trail on the shared detail template.",
+  },
 ];
 
 export function getRecord(slug: string) {
