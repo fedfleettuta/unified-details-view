@@ -121,7 +121,10 @@ export const records: RecordConfig[] = [
       { label: "Odometer", value: "148,210 km", kind: "number" },
       { label: "Next service", value: "Sep 12, 2026", kind: "date" },
       { label: "Licence expiry", value: "Aug 8, 2026", kind: "date", tone: "warning" },
-      { label: "Assigned driver", value: "AA AA" },
+      { label: "In use by", value: "AA AA", tone: "info" },
+      { label: "Since", value: "Aug 8, 2026 · 07:42" },
+      { label: "Last returned by", value: "AA AA — Aug 7, 17:05" },
+      { label: "Open damages", value: "3", kind: "number", tone: "warning" },
     ],
     groups: [
       {
