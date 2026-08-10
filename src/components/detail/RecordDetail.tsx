@@ -9,6 +9,10 @@ import { Spotlight } from "./Spotlight";
 import { MetricStrip } from "./MetricStrip";
 import { ComplianceStrip } from "./ComplianceStrip";
 import { RelatedLists } from "./RelatedLists";
+import { InspectionPanels } from "./InspectionPanels";
+import { DamageReportPanels } from "./DamageReportPanels";
+import { EvidencePanel } from "./EvidencePanel";
+import { DecisionCallout } from "./DecisionCallout";
 import { Button } from "@/components/ui/button";
 import type { RecordConfig } from "@/data/records";
 
@@ -37,6 +41,8 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
         <div className="order-2 space-y-5 lg:order-1">
           {record.spotlight ? <Spotlight spotlight={record.spotlight} /> : null}
 
+          {record.decision ? <DecisionCallout decision={record.decision} /> : null}
+
           {record.origin ? (
             <Panel className="border-l-2 border-l-primary">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
@@ -63,6 +69,12 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
           ) : null}
 
           <DetailsPanel groups={record.groups} />
+
+          {record.evidence ? <EvidencePanel evidence={record.evidence} /> : null}
+
+          {record.inspections ? <InspectionPanels inspections={record.inspections} /> : null}
+
+          {record.damageReports ? <DamageReportPanels reports={record.damageReports} /> : null}
 
           {record.metrics ? <MetricStrip metrics={record.metrics} /> : null}
 
