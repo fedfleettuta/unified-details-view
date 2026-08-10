@@ -635,6 +635,185 @@ export const records: RecordConfig[] = [
       "Driver record with identity, licence, CPC and employment details on the shared detail template.",
   },
   {
+    slug: "session",
+    listName: "Sessions",
+    listPlural: "Sessions",
+    typeLabel: "Session",
+    title: "Session report",
+    reference: "SES-0007",
+    crumb: "Session — 11/07/2026",
+    status: { label: "Completed", tone: "active" },
+    vehicle: VEHICLE,
+    headline: "AA AA · started Jul 11, 22:40 · returned Jul 12, 14:37 · 2 issues, 2 damages",
+    summary: [
+      { label: "Driver", value: "AA AA" },
+      { label: "Started at", value: "Jul 11, 2026 · 22:40:20", kind: "date" },
+      { label: "Ended at", value: "Jul 12, 2026 · 14:37:29", kind: "date" },
+      { label: "Duration", value: "15h 57m" },
+      { label: "Distance", value: "182 km", kind: "number" },
+      { label: "Return inspection", value: "Completed", tone: "active" },
+      { label: "Issues raised", value: "2", kind: "number", tone: "warning" },
+      { label: "New damages", value: "1", kind: "number", tone: "warning" },
+    ],
+    groups: [
+      {
+        title: "Assignment",
+        fields: [
+          { label: "Driver", value: "AA AA" },
+          { label: "Vehicle", value: "FED-003", kind: "mono" },
+          { label: "Reference ID", value: "SES-0007", kind: "mono" },
+          { label: "Depot", value: "Marsa yard" },
+        ],
+      },
+      {
+        title: "Timings",
+        fields: [
+          { label: "Started at", value: "11/07/2026, 22:40:20", kind: "date" },
+          { label: "Ended at", value: "12/07/2026, 14:37:29", kind: "date" },
+          { label: "Duration", value: "15h 57m" },
+          { label: "Return inspection at", value: "12/07/2026, 14:35:02", kind: "date" },
+          { label: "Closed late", value: "No" },
+        ],
+      },
+      {
+        title: "Odometer & fuel",
+        fields: [
+          { label: "Odometer at start", value: "148,028 km", kind: "number" },
+          { label: "Odometer at return", value: "148,210 km", kind: "number" },
+          { label: "Distance driven", value: "182 km", kind: "number" },
+          { label: "Fuel level at return", value: "Full" },
+          { label: "Driver notes", value: "Brakes felt soft on the hill descent." },
+        ],
+      },
+    ],
+    documents: [
+      { label: "Signed session report", name: "ses-0007-report.pdf" },
+      { label: "Pre-trip photo set", name: "ses-0007-pretrip.zip" },
+      { label: "Return photo set", name: "ses-0007-return.zip" },
+    ],
+    inspections: {
+      title: "Inspections",
+      note: "Pre-trip and return checklists recorded by the driver",
+      blocks: [
+        {
+          title: "Pre-trip inspection",
+          meta: "Completed 11/07/2026, 22:40 by AA AA",
+          issueLabel: "1 issue",
+          items: [
+            { label: "Lights (head, brake, indicators)", state: "pass" },
+            { label: "Fluid leaks underneath", state: "pass" },
+            { label: "Dashboard warning lights", state: "pass" },
+            {
+              label: "Brakes feel",
+              state: "issue",
+              note: "1 photo · converted to maintenance MNT-003",
+              actionLabel: "View maintenance",
+            },
+            { label: "Seatbelts & interior cleanliness", state: "pass" },
+          ],
+        },
+        {
+          title: "Return inspection",
+          meta: "Completed 12/07/2026, 14:35 by AA AA",
+          issueLabel: "1 issue",
+          items: [
+            { label: "New damage?", state: "issue", note: "1 item(s) reported" },
+            { label: "Fuel level", state: "pass", note: "Full" },
+            { label: "Warning lights?", state: "pass" },
+          ],
+        },
+      ],
+    },
+    damageReports: {
+      title: "Damages recorded in this session",
+      note: "Each entry links to its own damage record",
+      blocks: [
+        {
+          title: "Damage reported on pre-trip",
+          countLabel: "1 item",
+          items: [
+            {
+              typeLabel: "Missing part",
+              view: "Front",
+              approvalLabel: "Approved",
+              approvalTone: "warning",
+              description: "dgdththh",
+              photoCount: 2,
+              reference: "fed003-009",
+            },
+          ],
+        },
+        {
+          title: "Damage reported on return",
+          countLabel: "1 item",
+          items: [
+            {
+              typeLabel: "Scratch",
+              view: "Front",
+              approvalLabel: "Approved",
+              approvalTone: "warning",
+              photoCount: 2,
+              reference: "fed003-016",
+            },
+          ],
+        },
+      ],
+    },
+    related: [
+      {
+        title: "Issues raised in this session",
+        countLabel: "2 issues",
+        columns: ["Item", "Inspection", "Outcome", "Record", "Status"],
+        rows: [
+          [
+            { text: "Brakes feel" },
+            { text: "Pre-trip" },
+            { text: "Sent to maintenance" },
+            { text: "MNT-003", kind: "mono" },
+            { text: "Repaired", tone: "active" },
+          ],
+          [
+            { text: "New damage?" },
+            { text: "Return" },
+            { text: "Damage recorded" },
+            { text: "fed003-016", kind: "mono" },
+            { text: "Pending approval", tone: "warning" },
+          ],
+        ],
+        linkLabel: "All issues for FED-003",
+      },
+    ],
+    activity: {
+      kind: "timeline",
+      title: "Status timeline",
+      items: [
+        {
+          title: "Session completed",
+          meta: "by AA AA · Jul 12, 2026 at 2:37 PM",
+          transition: "Return inspection → Completed",
+        },
+        {
+          title: "Return inspection submitted",
+          meta: "by AA AA · Jul 12, 2026 at 2:35 PM",
+          transition: "In use → Return inspection",
+        },
+        {
+          title: "Vehicle taken out",
+          meta: "by AA AA · Jul 11, 2026 at 10:40 PM",
+          transition: "Pre-trip inspection → In use",
+        },
+        {
+          title: "Session started",
+          meta: "by AA AA · Jul 11, 2026 at 10:40 PM",
+          transition: "Draft → Pre-trip inspection",
+        },
+      ],
+    },
+    primaryAction: "Export report",
+    description:
+      "Session report with pre-trip and return inspections, issues, damages and status timeline on the shared detail template.",
+  },
+  {
     slug: "licence-policy",
     listName: "Licence & Policy",
     listPlural: "Licences & policies",
