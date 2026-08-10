@@ -1147,6 +1147,27 @@ export const records: RecordConfig[] = [
       lines: ["Started Aug 7, 07:31 · Returned Aug 7, 17:05", "Damage first recorded at return"],
       actionLabel: "View session",
     },
+    evidence: {
+      title: "Location on blueprint",
+      blueprintLabel: "outline schematic",
+      views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
+      activeView: "Front",
+      marker: { x: 34, y: 62, label: "Front bumper — left" },
+      hint: "Tap the blueprint to drop a damage marker.",
+      photosTitle: "Driver photos",
+      photos: [
+        { name: "dmg-4471-bumper.jpg", approvalLabel: "Approved", approvalTone: "active" },
+        { name: "dmg-4471-detail.jpg", approvalLabel: "Approved", approvalTone: "active" },
+      ],
+    },
+    decision: {
+      tone: "info",
+      title: "Management decision required",
+      body: "This damage has been approved and is awaiting a decision on whether to send it for repair.",
+      primaryLabel: "Send to repair",
+      secondaryLabel: "Log as accepted wear",
+      note: "Marker and both photos approved by admin@fleetguard.com on Aug 7, 2026.",
+    },
     related: [
       {
         title: "Linked repair",
