@@ -1323,6 +1323,119 @@ export const records: RecordConfig[] = [
     description:
       "Repair job record with supplier, schedule, costs, source damage and audit trail on the shared detail template.",
   },
+  {
+    slug: "damage-pending",
+    listName: "Damages",
+    listPlural: "Damages",
+    typeLabel: "Damage · pending approval",
+    title: "Driver-reported damage",
+    reference: "fed003-016",
+    crumb: "fed003-016 — FED-003",
+    status: { label: "Pending approval", tone: "warning" },
+    vehicle: VEHICLE,
+    headline: "Reported by AA AA on Jul 26, 2026 · 16:13 · awaiting admin review",
+    summary: [
+      { label: "Damage type", value: "Scratch" },
+      { label: "View", value: "Front" },
+      { label: "Reported", value: "Jul 26, 2026 · 16:13", kind: "date" },
+      { label: "Reported by", value: "AA AA" },
+      { label: "Approval", value: "Pending approval", tone: "warning" },
+      { label: "Photos approved", value: "2 of 2", kind: "number", tone: "active" },
+      { label: "Marker approved", value: "No", tone: "warning" },
+      { label: "Visible in reports", value: "No", tone: "neutral" },
+    ],
+    groups: [
+      {
+        title: "Damage",
+        fields: [
+          { label: "Damage type", value: "Scratch" },
+          { label: "View", value: "Front" },
+          { label: "Position", value: "Front bumper — centre" },
+          { label: "Severity", value: null },
+          { label: "Description", value: null },
+          { label: "Pre-existing", value: "Unknown — pending review" },
+        ],
+      },
+      {
+        title: "Reporting",
+        fields: [
+          { label: "Reported by", value: "AA AA" },
+          { label: "Inspection", value: "Return inspection" },
+          { label: "Reported at", value: "26/07/2026, 16:13:19", kind: "date" },
+          { label: "Session", value: "SES-0007", kind: "mono" },
+          { label: "Odometer", value: "148,210 km", kind: "number" },
+          { label: "Depot", value: "Marsa yard" },
+        ],
+      },
+      {
+        title: "Review",
+        fields: [
+          { label: "Version", value: "Version A (of 2)" },
+          { label: "Last reviewed by", value: "admin@fleetguard.com" },
+          { label: "Last reviewed at", value: "Aug 10, 2026 · 17:04", kind: "date" },
+          { label: "Rejection reason", value: null },
+          { label: "Liability", value: null },
+          { label: "Estimated cost", value: null, kind: "money" },
+        ],
+      },
+    ],
+    documents: [
+      { label: "Driver photo 1", name: "fed003-016-front-a.jpg" },
+      { label: "Driver photo 2", name: "fed003-016-front-b.jpg" },
+      { label: "Assessment report", name: null },
+    ],
+    decision: {
+      tone: "warning",
+      title: "Review required",
+      body: "Approve to make this damage visible in fleet reports, or reject if it doesn't meet documentation standards.",
+      primaryLabel: "Approve marker & all photos",
+      secondaryLabel: "Reject",
+      note: "Rejection reason is optional but recommended — e.g. photos unclear, damage appears pre-existing.",
+    },
+    evidence: {
+      title: "Location on blueprint",
+      blueprintLabel: "outline schematic",
+      views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
+      activeView: "Front",
+      marker: { x: 46, y: 66, label: "Awaiting approval" },
+      hint: "Tap the blueprint to drop a damage marker.",
+      photosTitle: "Driver photos",
+      photos: [
+        { name: "fed003-016-front-a.jpg", approvalLabel: "Approved", approvalTone: "active" },
+        { name: "fed003-016-front-b.jpg", approvalLabel: "Approved", approvalTone: "active" },
+      ],
+    },
+    origin: {
+      eyebrow: "Origin · session return inspection",
+      title: "Session SES-0007 · FED-003 · AA AA",
+      lines: ["Started Jul 11, 22:40 · Returned Jul 12, 14:37", "Damage first recorded at return"],
+      actionLabel: "View session",
+    },
+    activity: {
+      kind: "timeline",
+      title: "Audit history",
+      items: [
+        {
+          title: "Reverted",
+          meta: "by admin@fleetguard.com · Aug 10, 2026 at 5:04 PM",
+          transition: "Approved → Pending approval",
+        },
+        {
+          title: "Damage approved",
+          meta: "by admin@fleetguard.com · Jul 26, 2026 at 4:41 PM",
+          transition: "Pending approval → Approved",
+        },
+        {
+          title: "Damage reported",
+          meta: "by AA AA · Jul 26, 2026 at 4:13 PM",
+          transition: "Return inspection",
+        },
+      ],
+    },
+    primaryAction: "Approve damage",
+    description:
+      "Driver-reported damage awaiting admin approval, with blueprint marker, photo review state and audit trail on the shared detail template.",
+  },
 ];
 
 export function getRecord(slug: string) {
