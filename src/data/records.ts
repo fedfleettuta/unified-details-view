@@ -1272,6 +1272,20 @@ export const records: RecordConfig[] = [
       lines: ["Reported by AA AA on Aug 7, 2026", "Approved Aug 7, 2026 · liability: driver"],
       actionLabel: "View damage",
     },
+    evidence: {
+      title: "Damage location (from DMG-4471)",
+      blueprintLabel: "outline schematic",
+      views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
+      activeView: "Front",
+      marker: { x: 34, y: 62, label: "Front bumper — left" },
+      hint: "Read-only view carried over from the source damage record.",
+      photosTitle: "Before & after photos",
+      photos: [
+        { name: "dmg-4471-bumper.jpg", approvalLabel: "Before", approvalTone: "neutral" },
+        { name: "dmg-4471-detail.jpg", approvalLabel: "Before", approvalTone: "neutral" },
+        { name: "rpr-0912-after.jpg", approvalLabel: "Pending workshop", approvalTone: "info" },
+      ],
+    },
     related: [
       {
         title: "Damages covered",
