@@ -54,7 +54,7 @@ export function EvidencePanel({ evidence }: { evidence: RecordEvidence }) {
             >
               <span className="relative flex h-6 w-6 items-center justify-center">
                 <span className="absolute inset-0 animate-ping rounded-full bg-danger/30" aria-hidden />
-                <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-danger text-[11px] font-bold text-danger-foreground shadow-panel">
+                <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-danger text-[11px] font-bold text-surface shadow-panel">
                   !
                 </span>
               </span>
