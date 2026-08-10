@@ -46,7 +46,7 @@ function Index() {
       <header className="max-w-2xl space-y-4">
         <p className="label-micro">Design system · detail pages</p>
         <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-          One detail template, nine record types
+          One detail template, eleven record types
         </h1>
         <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
           Every page below is the same component tree driven by a record config. Nothing is shown
