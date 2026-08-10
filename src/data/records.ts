@@ -78,6 +78,79 @@ export interface RelatedList {
   emptyLabel?: string;
 }
 
+/** A single checklist line inside a pre-trip / return inspection. */
+export interface InspectionItem {
+  label: string;
+  state: "pass" | "issue" | "na";
+  note?: string;
+  actionLabel?: string;
+}
+
+export interface InspectionBlock {
+  title: string;
+  meta?: string;
+  issueLabel?: string;
+  items: InspectionItem[];
+  emptyLabel?: string;
+}
+
+export interface RecordInspections {
+  title: string;
+  note?: string;
+  blocks: InspectionBlock[];
+}
+
+export interface EvidencePhoto {
+  name: string;
+  approvalLabel?: string;
+  approvalTone?: StatusTone;
+}
+
+export interface RecordEvidence {
+  title: string;
+  blueprintLabel: string;
+  views: string[];
+  activeView: string;
+  /** Marker position on the schematic, in percent of the frame. */
+  marker?: { x: number; y: number; label: string };
+  hint?: string;
+  photosTitle: string;
+  photos: EvidencePhoto[];
+  photosEmptyLabel?: string;
+}
+
+export interface RecordDecision {
+  tone: Extract<StatusTone, "warning" | "info" | "active" | "danger">;
+  title: string;
+  body: string;
+  primaryLabel: string;
+  secondaryLabel?: string;
+  note?: string;
+}
+
+export interface DamageReportItem {
+  typeLabel: string;
+  view: string;
+  approvalLabel: string;
+  approvalTone: StatusTone;
+  description?: string;
+  photoCount: number;
+  reference?: string;
+}
+
+export interface DamageReportBlock {
+  title: string;
+  countLabel?: string;
+  items: DamageReportItem[];
+  emptyLabel?: string;
+}
+
+export interface RecordDamageReports {
+  title: string;
+  note?: string;
+  blocks: DamageReportBlock[];
+}
+
 export interface RecordConfig {
   slug: string;
   /** Name of the list page this record belongs to. */
@@ -99,6 +172,10 @@ export interface RecordConfig {
   metrics?: RecordMetrics;
   compliance?: ComplianceItem[];
   related?: RelatedList[];
+  inspections?: RecordInspections;
+  damageReports?: RecordDamageReports;
+  evidence?: RecordEvidence;
+  decision?: RecordDecision;
   activity?: RecordActivity;
   primaryAction?: string;
   description: string;
