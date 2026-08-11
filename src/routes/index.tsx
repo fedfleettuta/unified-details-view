@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { StatusPill } from "@/components/detail/StatusPill";
 import { Panel } from "@/components/detail/Panel";
 import { records } from "@/data/records";
+import { lists } from "@/data/lists";
 
 const TITLE = "Fleet Detail Kit — one template, every record";
 const DESCRIPTION =
@@ -78,6 +79,40 @@ function Index() {
                 </p>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
                   Open detail page
+                  <ArrowRight
+                    className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="label-micro">List pages</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          One shared list template: header with stats, segment tabs, filters and search, a selectable
+          data table with bulk actions, plus New / Upload / Export actions.
+        </p>
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {lists.map((list) => (
+            <li key={list.slug}>
+              <Link
+                to="/lists/$list"
+                params={{ list: list.slug }}
+                className="group block h-full rounded-xl border border-hairline bg-surface p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-primary/40"
+              >
+                <span className="label-micro">List page</span>
+                <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">
+                  {list.title}
+                </h3>
+                <p className="mt-1 font-numeric text-sm text-muted-foreground">
+                  {list.rows.length} sample rows
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+                  Open list page
                   <ArrowRight
                     className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
                     aria-hidden

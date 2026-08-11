@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ListsListRouteImport } from './routes/lists.$list'
 import { Route as RecordsTypeRouteImport } from './routes/records.$type'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListsListRoute = ListsListRouteImport.update({
+  id: '/lists/$list',
+  path: '/lists/$list',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecordsTypeRoute = RecordsTypeRouteImport.update({
@@ -25,27 +31,31 @@ const RecordsTypeRoute = RecordsTypeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/records/$type'
+  fullPaths: '/' | '/lists/$list' | '/records/$type'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/records/$type'
-  id: '__root__' | '/' | '/records/$type'
+  to: '/' | '/lists/$list' | '/records/$type'
+  id: '__root__' | '/' | '/lists/$list' | '/records/$type'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ListsListRoute: typeof ListsListRoute
   RecordsTypeRoute: typeof RecordsTypeRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lists/$list': {
+      id: '/lists/$list'
+      path: '/lists/$list'
+      fullPath: '/lists/$list'
+      preLoaderRoute: typeof ListsListRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/records/$type': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ListsListRoute: ListsListRoute,
   RecordsTypeRoute: RecordsTypeRoute,
 }
 export const routeTree = rootRouteImport

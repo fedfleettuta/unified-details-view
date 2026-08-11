@@ -1,8 +1,9 @@
-import { Paperclip } from "lucide-react";
+import { Paperclip, Upload } from "lucide-react";
 
 import { Panel, PanelHeader } from "./Panel";
 import { FieldValue } from "./Field";
 import { StatusPill } from "./StatusPill";
+import { UploadDialog } from "./UploadDialog";
 import type { RecordDocument, SummaryItem } from "@/data/records";
 
 export function SummaryRail({
@@ -36,7 +37,23 @@ export function SummaryRail({
       </Panel>
 
       <Panel>
-        <PanelHeader title="Documents" icon={<Paperclip className="h-4 w-4" />} />
+        <PanelHeader
+          title="Documents"
+          icon={<Paperclip className="h-4 w-4" />}
+          action={
+            <UploadDialog
+              trigger={
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-accent"
+                >
+                  <Upload className="h-3.5 w-3.5" aria-hidden />
+                  Upload
+                </button>
+              }
+            />
+          }
+        />
         <ul className="mt-4 space-y-1">
           {documents.map((doc) => (
             <li key={doc.label}>
