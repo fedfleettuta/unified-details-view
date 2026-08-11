@@ -2,10 +2,17 @@ import { useState } from "react";
 import { ListTree, Pencil } from "lucide-react";
 
 import { Panel, PanelHeader } from "./Panel";
+import { EditRecordSheet } from "./EditRecordSheet";
 import { Field } from "./Field";
 import type { RecordFieldGroup } from "@/data/records";
 
-export function DetailsPanel({ groups }: { groups: RecordFieldGroup[] }) {
+export function DetailsPanel({
+  groups,
+  recordTitle = "record",
+}: {
+  groups: RecordFieldGroup[];
+  recordTitle?: string;
+}) {
   const [showEmpty, setShowEmpty] = useState(false);
 
   const emptyCount = groups.reduce(
@@ -36,13 +43,19 @@ export function DetailsPanel({ groups }: { groups: RecordFieldGroup[] }) {
                 {showEmpty ? "Hide empty" : `Show empty (${emptyCount})`}
               </button>
             ) : null}
-            <button
-              type="button"
-              className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-accent"
-            >
-              <Pencil className="h-3.5 w-3.5" aria-hidden />
-              Edit
-            </button>
+            <EditRecordSheet
+              title={recordTitle}
+              groups={groups}
+              trigger={
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-accent"
+                >
+                  <Pencil className="h-3.5 w-3.5" aria-hidden />
+                  Edit
+                </button>
+              }
+            />
           </div>
         }
       />

@@ -68,7 +68,7 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
             </Panel>
           ) : null}
 
-          <DetailsPanel groups={record.groups} />
+          <DetailsPanel groups={record.groups} recordTitle={record.typeLabel} />
 
           {record.evidence ? <EvidencePanel evidence={record.evidence} /> : null}
 
