@@ -1061,7 +1061,7 @@ export const lists: ListConfig[] = [
       { label: "Total assets", value: "5", kind: "number", icon: "package" },
       { label: "Active", value: "4", kind: "number", icon: "check", tone: "active" },
       { label: "Replaced", value: "1", kind: "number", icon: "archive", tone: "info" },
-      { label: "Total purchase value", value: "€255.05", kind: "currency", icon: "money" },
+      { label: "Total purchase value", value: "€255.05", kind: "money", icon: "money" },
     ],
     segments: [
       { label: "All", count: 5 },
@@ -1080,7 +1080,7 @@ export const lists: ListConfig[] = [
       { key: "type", label: "Type", hideBelow: "md" },
       { key: "serial", label: "Serial number", hideBelow: "md" },
       { key: "purchased", label: "Purchase date", kind: "date", hideBelow: "lg" },
-      { key: "cost", label: "Purchase cost", kind: "currency", align: "right" },
+      { key: "cost", label: "Purchase cost", kind: "money", align: "right" },
       { key: "supplier", label: "Supplier", hideBelow: "lg" },
       { key: "status", label: "Status" },
     ],
@@ -1171,9 +1171,9 @@ export const lists: ListConfig[] = [
     uploadAction: "Attach notices",
     stats: [
       { label: "Outstanding fines", value: "1", kind: "number", icon: "gavel", tone: "warning" },
-      { label: "Outstanding amount", value: "€48.00", kind: "currency", icon: "money", tone: "danger", highlight: true, hint: "Due in 6 days" },
+      { label: "Outstanding amount", value: "€48.00", kind: "money", icon: "money", tone: "danger", highlight: true, hint: "Due in 6 days" },
       { label: "Total fines", value: "3", kind: "number", icon: "file" },
-      { label: "Paid this year", value: "€59.00", kind: "currency", icon: "check" },
+      { label: "Paid this year", value: "€59.00", kind: "money", icon: "check" },
     ],
     segments: [
       { label: "All", count: 3 },
@@ -1192,7 +1192,7 @@ export const lists: ListConfig[] = [
       { key: "vehicle", label: "Vehicle" },
       { key: "driver", label: "Driver", hideBelow: "sm" },
       { key: "contravention", label: "Contravention #", hideBelow: "md" },
-      { key: "amount", label: "Amount", kind: "currency", align: "right" },
+      { key: "amount", label: "Amount", kind: "money", align: "right" },
       { key: "status", label: "Status" },
     ],
     page: { current: 1, total: 1 },
@@ -1247,9 +1247,9 @@ export const lists: ListConfig[] = [
     primaryAction: "Add fuel",
     uploadAction: "Attach receipts",
     stats: [
-      { label: "Fuel spend (Aug 2026)", value: "€211.01", kind: "currency", icon: "money" },
+      { label: "Fuel spend (Aug 2026)", value: "€211.01", kind: "money", icon: "money" },
       { label: "Fill-ups (Aug 2026)", value: "5", kind: "number", icon: "fuel", tone: "warning" },
-      { label: "Avg cost / fill-up", value: "€70.34", kind: "currency", icon: "gauge", tone: "active" },
+      { label: "Avg cost / fill-up", value: "€70.34", kind: "money", icon: "gauge", tone: "active" },
       { label: "Missing receipt", value: "3", kind: "number", icon: "alert", tone: "warning", hint: "Chase drivers" },
     ],
     segments: [
@@ -1266,7 +1266,7 @@ export const lists: ListConfig[] = [
     columns: [
       { key: "date", label: "Date", kind: "date", width: "9rem" },
       { key: "vehicle", label: "Vehicle" },
-      { key: "amount", label: "Amount", kind: "currency", align: "right" },
+      { key: "amount", label: "Amount", kind: "money", align: "right" },
       { key: "litres", label: "Litres", kind: "number", hideBelow: "sm" },
       { key: "receipt", label: "Receipt #", hideBelow: "md" },
       { key: "supplier", label: "Supplier", hideBelow: "md" },
@@ -1350,7 +1350,7 @@ export const lists: ListConfig[] = [
       { label: "Expired", value: "1", kind: "number", icon: "x", tone: "danger", highlight: true, hint: "Past expiry" },
       { label: "Expiring soon", value: "0", kind: "number", icon: "clock", tone: "warning", hint: "None expiring" },
       { label: "Next renewal", value: "Aug 11, 2027", kind: "date", icon: "calendar", hint: "In 363 days" },
-      { label: "Annual cost", value: "€711.00", kind: "currency", icon: "money" },
+      { label: "Annual cost", value: "€711.00", kind: "money", icon: "money" },
     ],
     segments: [
       { label: "All", count: 2 },
@@ -1365,10 +1365,10 @@ export const lists: ListConfig[] = [
     columns: [
       { key: "vehicle", label: "Vehicle", width: "9rem" },
       { key: "renewal", label: "Renewal date", kind: "date" },
-      { key: "licence", label: "Licence", kind: "currency", align: "right", hideBelow: "md" },
-      { key: "policy", label: "Policy", kind: "currency", align: "right", hideBelow: "md" },
-      { key: "vrt", label: "VRT", kind: "currency", align: "right", hideBelow: "lg" },
-      { key: "total", label: "Total", kind: "currency", align: "right" },
+      { key: "licence", label: "Licence", kind: "money", align: "right", hideBelow: "md" },
+      { key: "policy", label: "Policy", kind: "money", align: "right", hideBelow: "md" },
+      { key: "vrt", label: "VRT", kind: "money", align: "right", hideBelow: "lg" },
+      { key: "total", label: "Total", kind: "money", align: "right" },
       { key: "status", label: "Status" },
       { key: "paid", label: "Paid" },
     ],
@@ -1418,7 +1418,7 @@ export const lists: ListConfig[] = [
       { label: "Total suppliers", value: "3", kind: "number", icon: "building" },
       { label: "Active", value: "3", kind: "number", icon: "check", tone: "active" },
       { label: "Inactive", value: "0", kind: "number", icon: "ban" },
-      { label: "Spend this year", value: "€1,842.00", kind: "currency", icon: "money" },
+      { label: "Spend this year", value: "€1,842.00", kind: "money", icon: "money" },
     ],
     segments: [
       { label: "All", count: 3 },
