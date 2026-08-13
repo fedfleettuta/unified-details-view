@@ -1,14 +1,13 @@
 import { useMemo, useState } from "react";
-import { ChevronRight, Download, Plus, Upload } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Download, Plus, Upload } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
-import { Panel, PanelHeader } from "@/components/detail/Panel";
-import { FieldValue } from "@/components/detail/Field";
-import { StatusPill } from "@/components/detail/StatusPill";
+import { Panel } from "@/components/detail/Panel";
 import { UploadDialog } from "@/components/detail/UploadDialog";
 import { DataTable } from "./DataTable";
 import { ListToolbar } from "./ListToolbar";
+import { StatCards } from "./StatCards";
 import type { ListConfig } from "@/data/lists";
 
 export function ListPage({ list }: { list: ListConfig }) {
@@ -16,6 +15,7 @@ export function ListPage({ list }: { list: ListConfig }) {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [sortKey, setSortKey] = useState<string | undefined>(undefined);
+  const selectable = list.selectable !== false;
 
   const rows = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -24,7 +24,7 @@ export function ListPage({ list }: { list: ListConfig }) {
       if (!inSegment) return false;
       if (!term) return true;
       return Object.values(row.cells).some((cell) =>
-        `${cell.text} ${cell.sub ?? ""}`.toLowerCase().includes(term),
+        `${cell.text} ${cell.sub ?? ""} ${cell.tags?.join(" ") ?? ""}`.toLowerCase().includes(term),
       );
     });
     if (sortKey) {
@@ -81,6 +81,12 @@ export function ListPage({ list }: { list: ListConfig }) {
                 }
               />
             ) : null}
+            {list.secondaryAction ? (
+              <Button size="sm" variant="outline">
+                {list.secondaryAction}
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+              </Button>
+            ) : null}
             <Button size="sm" className="shadow-panel">
               <Plus className="h-3.5 w-3.5" aria-hidden />
               {list.primaryAction}
@@ -89,22 +95,7 @@ export function ListPage({ list }: { list: ListConfig }) {
         </div>
       </header>
 
-      <Panel padded={false} className="px-5 py-4 sm:px-6">
-        <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
-          {list.stats.map((stat) => (
-            <div key={stat.label} className="space-y-1">
-              <dt className="label-micro">{stat.label}</dt>
-              <dd className="text-lg font-semibold">
-                {stat.tone ? (
-                  <StatusPill label={stat.value} tone={stat.tone} size="sm" />
-                ) : (
-                  <FieldValue value={stat.value} kind={stat.kind} />
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Panel>
+      <StatCards stats={list.stats} />
 
       <ListToolbar
         segments={list.segments}
@@ -119,7 +110,7 @@ export function ListPage({ list }: { list: ListConfig }) {
         searchPlaceholder={list.searchPlaceholder}
       />
 
-      {selected.length ? (
+      {selectable && selected.length ? (
         <Panel padded={false} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
           <p className="text-sm">
             <span className="font-numeric font-semibold">{selected.length}</span> selected
@@ -140,6 +131,7 @@ export function ListPage({ list }: { list: ListConfig }) {
         columns={list.columns}
         rows={rows}
         selected={selected}
+        selectable={selectable}
         sortKey={sortKey}
         onSort={setSortKey}
         onToggleRow={(id) =>
@@ -158,12 +150,17 @@ export function ListPage({ list }: { list: ListConfig }) {
           Showing <span className="font-numeric">{rows.length}</span> of{" "}
           <span className="font-numeric">{list.rows.length}</span> {list.name.toLowerCase()}
         </p>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" disabled>
+            <ChevronLeft className="h-3.5 w-3.5" aria-hidden />
             Previous
           </Button>
+          <span className="font-numeric px-1">
+            Page {list.page?.current ?? 1} of {list.page?.total ?? 1}
+          </span>
           <Button size="sm" variant="outline">
             Next
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden />
           </Button>
         </div>
       </footer>
