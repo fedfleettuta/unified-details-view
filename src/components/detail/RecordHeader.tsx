@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Truck } from "lucide-react";
+import { ChevronRight, Clock, Truck } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { StatusPill } from "./StatusPill";
@@ -31,6 +31,9 @@ export function RecordHeader({ record, actions }: { record: RecordConfig; action
               {record.title}
             </h1>
             <StatusPill label={record.status.label} tone={record.status.tone} />
+            {record.statusExtras?.map((extra) => (
+              <StatusPill key={extra.label} label={extra.label} tone={extra.tone} size="sm" />
+            ))}
             {record.reference ? (
               <span className="rounded-md bg-surface-muted px-2 py-0.5 font-mono text-[11px] text-muted-foreground">
                 {record.reference}
@@ -46,6 +49,17 @@ export function RecordHeader({ record, actions }: { record: RecordConfig; action
               </span>
             ) : null}
             <span className="min-w-0">{record.headline}</span>
+            {record.timestamp ? (
+              <span className="font-numeric inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5" aria-hidden />
+                {record.timestamp}
+              </span>
+            ) : null}
+            {record.variantLabel ? (
+              <span className="rounded-full border border-dashed border-hairline px-2 py-0.5 text-[11px] text-muted-foreground">
+                {record.variantLabel}
+              </span>
+            ) : null}
           </div>
         </div>
         {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}

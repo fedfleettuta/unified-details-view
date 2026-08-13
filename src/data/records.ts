@@ -45,6 +45,10 @@ export interface RecordOrigin {
   title: string;
   lines: string[];
   actionLabel: string;
+  /** Mono reference chip under the title, e.g. fed003-017. */
+  reference?: string;
+  /** Status badge shown next to the reference, e.g. "To Repair". */
+  badge?: { label: string; tone: StatusTone };
 }
 
 export interface RecordSpotlight {
@@ -117,6 +121,8 @@ export interface RecordEvidence {
   photosTitle: string;
   photos: EvidencePhoto[];
   photosEmptyLabel?: string;
+  /** Per-photo moderation actions, e.g. ["Unapprove", "Delete"]. */
+  photoActions?: string[];
 }
 
 export interface RecordDecision {
@@ -126,6 +132,20 @@ export interface RecordDecision {
   primaryLabel: string;
   secondaryLabel?: string;
   note?: string;
+}
+
+/** Header action button. */
+export interface RecordAction {
+  label: string;
+  variant?: "primary" | "outline" | "success";
+  icon?: "car" | "check" | "plus" | "external" | "wrench" | "eye";
+}
+
+/** Collapsible status timeline shown right under the details panel. */
+export interface RecordStatusTimeline {
+  title: string;
+  note?: string;
+  items: Array<{ title: string; meta: string; transition?: string }>;
 }
 
 export interface DamageReportItem {
@@ -162,12 +182,21 @@ export interface RecordConfig {
   reference?: string;
   crumb: string;
   status: { label: string; tone: StatusTone };
+  /** Extra state pills next to the main status, e.g. Approved + To Repair. */
+  statusExtras?: Array<{ label: string; tone: StatusTone }>;
+  /** Muted timestamp under the title, e.g. "06/08/2026, 17:44:43". */
+  timestamp?: string;
+  /** Ghost chip for switching template variants, e.g. "Switch to Version B". */
+  variantLabel?: string;
   vehicle?: { reg: string; model: string };
   headline: string;
   summary: SummaryItem[];
   groups: RecordFieldGroup[];
   documents: RecordDocument[];
   origin?: RecordOrigin;
+  /** Linked-record banners (linked damage, linked repair, source checklist item). */
+  links?: RecordOrigin[];
+  statusTimeline?: RecordStatusTimeline;
   spotlight?: RecordSpotlight;
   metrics?: RecordMetrics;
   compliance?: ComplianceItem[];
@@ -178,6 +207,8 @@ export interface RecordConfig {
   decision?: RecordDecision;
   activity?: RecordActivity;
   primaryAction?: string;
+  /** Full header action set; falls back to primaryAction + View vehicle. */
+  actions?: RecordAction[];
   description: string;
 }
 

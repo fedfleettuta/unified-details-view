@@ -105,6 +105,19 @@ export function EvidencePanel({ evidence }: { evidence: RecordEvidence }) {
                       size="sm"
                     />
                   ) : null}
+                  {evidence.photoActions?.length ? (
+                    <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      {evidence.photoActions.map((action) => (
+                        <button
+                          key={action}
+                          type="button"
+                          className="rounded-md border border-hairline bg-surface px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                          {action}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </li>
             ))}

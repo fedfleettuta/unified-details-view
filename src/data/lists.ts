@@ -10,11 +10,75 @@ export interface ListColumn {
   width?: string;
 }
 
+/** Small icon slot used by the list stat cards. */
+export type ListStatIcon =
+  | "activity"
+  | "alert"
+  | "archive"
+  | "ban"
+  | "building"
+  | "calendar"
+  | "car"
+  | "check"
+  | "clipboard"
+  | "clock"
+  | "file"
+  | "fuel"
+  | "gauge"
+  | "gavel"
+  | "money"
+  | "package"
+  | "shield"
+  | "users"
+  | "wrench"
+  | "x";
+
+export interface ListStat extends SummaryItem {
+  icon?: ListStatIcon;
+  /** Secondary line under the value, e.g. "2 in progress". */
+  hint?: string;
+  /** Tints the whole card, for the "needs attention" KPI. */
+  highlight?: boolean;
+}
+
+export interface ListBadge {
+  label: string;
+  tone?: StatusTone;
+  variant?: "solid" | "outline" | "soft";
+  /** Renders a caret, for badges that double as an inline status picker. */
+  caret?: boolean;
+}
+
+export type ListRowActionIcon =
+  | "archive"
+  | "eye"
+  | "image"
+  | "key"
+  | "pencil"
+  | "power"
+  | "wrench";
+
+export interface ListRowAction {
+  label: string;
+  icon?: ListRowActionIcon;
+  variant?: "ghost" | "outline";
+}
+
 export interface ListCell {
   text: string;
   sub?: string;
   kind?: FieldKind;
   tone?: StatusTone;
+  /** Renders the text as a mono reference chip, e.g. fed003-020. */
+  chip?: boolean;
+  /** Renders the text in the link colour (reg numbers, receipt refs). */
+  link?: boolean;
+  /** Trailing muted qualifier on the same line, e.g. "/ front". */
+  qualifier?: string;
+  /** One or more badges instead of / next to the text. */
+  badges?: ListBadge[];
+  /** Neutral outline tags, e.g. supplier types. */
+  tags?: string[];
 }
 
 export interface ListRow {
@@ -23,16 +87,22 @@ export interface ListRow {
   recordSlug?: string;
   segment: string;
   cells: Record<string, ListCell>;
+  /** Inline row actions (Manage, Edit, Archive, Create Maintenance…). */
+  actions?: ListRowAction[];
 }
 
 export interface ListSegment {
   label: string;
   count: number;
+  tone?: StatusTone;
 }
 
 export interface ListFilter {
   label: string;
-  options: string[];
+  /** Defaults to "select". */
+  kind?: "select" | "date" | "search";
+  options?: string[];
+  placeholder?: string;
 }
 
 export interface ListConfig {
@@ -43,14 +113,20 @@ export interface ListConfig {
   description: string;
   searchPlaceholder: string;
   primaryAction: string;
+  /** Optional secondary header button, e.g. "Try V2". */
+  secondaryAction?: string;
   /** Enables the upload button in the list header (bulk import / attachments). */
   uploadAction?: string;
-  stats: SummaryItem[];
+  stats: ListStat[];
   segments: ListSegment[];
   filters: ListFilter[];
   columns: ListColumn[];
   rows: ListRow[];
   emptyLabel?: string;
+  /** Row checkboxes + bulk bar. Defaults to true. */
+  selectable?: boolean;
+  /** Pagination footer state. */
+  page?: { current: number; total: number };
 }
 
 const c = (text: string, extra: Omit<ListCell, "text"> = {}): ListCell => ({ text, ...extra });
@@ -767,6 +843,780 @@ export const lists: ListConfig[] = [
           odometer: c("95,210 km"),
           cost: c("€188.00"),
           status: c("Repaired", { tone: "active" }),
+        },
+      },
+    ],
+  },
+  {
+    slug: "vehicles",
+    name: "Vehicles",
+    typeLabel: "Vehicle",
+    title: "Vehicles",
+    description: "Manage the fleet — availability, open damages and who used each vehicle last.",
+    searchPlaceholder: "Search by reg, make or model",
+    primaryAction: "New vehicle",
+    secondaryAction: "Try V2",
+    stats: [
+      { label: "Total vehicles", value: "4", kind: "number", icon: "car" },
+      { label: "Available", value: "2", kind: "number", icon: "check", tone: "active" },
+      { label: "In maintenance", value: "1", kind: "number", icon: "wrench", tone: "warning" },
+      { label: "Open damages", value: "3", kind: "number", icon: "alert", tone: "danger", highlight: true, hint: "2 awaiting approval" },
+    ],
+    segments: [
+      { label: "All", count: 4 },
+      { label: "Available", count: 2, tone: "active" },
+      { label: "In use", count: 1, tone: "info" },
+      { label: "In maintenance", count: 1, tone: "warning" },
+    ],
+    filters: [{ label: "Status", options: ["All statuses", "Available", "In use", "In maintenance", "Archived"] }],
+    columns: [
+      { key: "reg", label: "Reg", width: "9rem" },
+      { key: "model", label: "Make / Model" },
+      { key: "year", label: "Year", kind: "number", hideBelow: "sm" },
+      { key: "status", label: "Status" },
+      { key: "damages", label: "Open damages", kind: "number", hideBelow: "md" },
+      { key: "lastUsed", label: "Last used", kind: "date", hideBelow: "md" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "FED-003",
+        recordSlug: "vehicle",
+        segment: "In use",
+        cells: {
+          reg: c("FED-003", { link: true }),
+          model: c("Toyota Hiace", { sub: "Panel van · diesel" }),
+          year: c("2000"),
+          status: c("In use", { badges: [{ label: "In use", tone: "info", variant: "outline" }] }),
+          damages: c("3", { qualifier: "2 to repair" }),
+          lastUsed: c("06/08/2026", { sub: "AA AA" }),
+        },
+        actions: [
+          { label: "Manage", icon: "image", variant: "outline" },
+          { label: "Edit", icon: "pencil" },
+          { label: "Archive", icon: "archive" },
+        ],
+      },
+      {
+        id: "FED-009",
+        segment: "Available",
+        cells: {
+          reg: c("FED-009", { link: true }),
+          model: c("Ford Transit Custom", { sub: "Panel van · diesel" }),
+          year: c("2021"),
+          status: c("Available", { badges: [{ label: "Available", tone: "active", variant: "outline" }] }),
+          damages: c("—"),
+          lastUsed: c("Never"),
+        },
+        actions: [
+          { label: "Manage", icon: "image", variant: "outline" },
+          { label: "Edit", icon: "pencil" },
+          { label: "Archive", icon: "archive" },
+        ],
+      },
+      {
+        id: "FED-011",
+        segment: "In maintenance",
+        cells: {
+          reg: c("FED-011", { link: true }),
+          model: c("Renault Kangoo"),
+          year: c("2019"),
+          status: c("In maintenance", { badges: [{ label: "Being repaired", tone: "info", variant: "soft" }] }),
+          damages: c("1"),
+          lastUsed: c("29/07/2026", { sub: "ttfh tufu" }),
+        },
+        actions: [
+          { label: "Manage", icon: "image", variant: "outline" },
+          { label: "Edit", icon: "pencil" },
+          { label: "Archive", icon: "archive" },
+        ],
+      },
+      {
+        id: "FED-014",
+        segment: "Available",
+        cells: {
+          reg: c("FED-014", { link: true }),
+          model: c("Peugeot Partner"),
+          year: c("2022"),
+          status: c("Available", { badges: [{ label: "Available", tone: "active", variant: "outline" }] }),
+          damages: c("—"),
+          lastUsed: c("02/08/2026", { sub: "Joe Meli" }),
+        },
+        actions: [
+          { label: "Manage", icon: "image", variant: "outline" },
+          { label: "Edit", icon: "pencil" },
+          { label: "Archive", icon: "archive" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "drivers",
+    name: "Drivers",
+    typeLabel: "Driver",
+    title: "Drivers",
+    description: "Manage driver accounts and PINs, and see who is currently holding a vehicle.",
+    searchPlaceholder: "Search by driver ID or name",
+    primaryAction: "New driver",
+    secondaryAction: "Try V2",
+    stats: [
+      { label: "Total drivers", value: "4", kind: "number", icon: "users" },
+      { label: "Enabled", value: "3", kind: "number", icon: "check", tone: "active" },
+      { label: "Disabled", value: "1", kind: "number", icon: "ban" },
+      { label: "In session now", value: "1", kind: "number", icon: "activity", tone: "info" },
+    ],
+    segments: [
+      { label: "All", count: 4 },
+      { label: "Enabled", count: 3, tone: "active" },
+      { label: "Disabled", count: 1 },
+    ],
+    filters: [
+      { label: "Search", kind: "search", placeholder: "Search by name…" },
+      { label: "Status", options: ["All", "Enabled", "Disabled"] },
+    ],
+    columns: [
+      { key: "driverId", label: "Driver ID", width: "10rem" },
+      { key: "name", label: "Name" },
+      { key: "status", label: "Status" },
+      { key: "sessions", label: "Sessions (30d)", kind: "number", hideBelow: "md" },
+      { key: "lastSession", label: "Last session", kind: "date", hideBelow: "md" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "FED001",
+        recordSlug: "driver",
+        segment: "Enabled",
+        cells: {
+          driverId: c("FED001"),
+          name: c("AA AA", { link: true }),
+          status: c("Enabled", { badges: [{ label: "Enabled", tone: "info", variant: "outline" }] }),
+          sessions: c("18"),
+          lastSession: c("06/08/2026", { sub: "FED-003" }),
+        },
+        actions: [
+          { label: "Edit / Reset PIN", icon: "key", variant: "outline" },
+          { label: "Disable", icon: "power" },
+        ],
+      },
+      {
+        id: "AAA",
+        segment: "Enabled",
+        cells: {
+          driverId: c("AAA"),
+          name: c("ttfh tufu", { link: true }),
+          status: c("Enabled", { badges: [{ label: "Enabled", tone: "info", variant: "outline" }] }),
+          sessions: c("6"),
+          lastSession: c("29/07/2026", { sub: "FED-011" }),
+        },
+        actions: [
+          { label: "Edit / Reset PIN", icon: "key", variant: "outline" },
+          { label: "Disable", icon: "power" },
+        ],
+      },
+      {
+        id: "FED004",
+        segment: "Enabled",
+        cells: {
+          driverId: c("FED004"),
+          name: c("Joe Meli", { link: true }),
+          status: c("Enabled", { badges: [{ label: "Enabled", tone: "info", variant: "outline" }] }),
+          sessions: c("11"),
+          lastSession: c("02/08/2026", { sub: "FED-014" }),
+        },
+        actions: [
+          { label: "Edit / Reset PIN", icon: "key", variant: "outline" },
+          { label: "Disable", icon: "power" },
+        ],
+      },
+      {
+        id: "FED007",
+        segment: "Disabled",
+        cells: {
+          driverId: c("FED007"),
+          name: c("Marija Borg", { link: true }),
+          status: c("Disabled", { badges: [{ label: "Disabled", tone: "neutral", variant: "outline" }] }),
+          sessions: c("0"),
+          lastSession: c("14/05/2026"),
+        },
+        actions: [
+          { label: "Edit / Reset PIN", icon: "key", variant: "outline" },
+          { label: "Enable", icon: "power" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "assets",
+    name: "Assets",
+    typeLabel: "Asset",
+    title: "Assets",
+    description: "Track equipment and inventory across the fleet, with serial numbers, cost and supplier.",
+    searchPlaceholder: "Search by asset name or serial number",
+    primaryAction: "Add asset",
+    uploadAction: "Import assets",
+    stats: [
+      { label: "Total assets", value: "5", kind: "number", icon: "package" },
+      { label: "Active", value: "4", kind: "number", icon: "check", tone: "active" },
+      { label: "Replaced", value: "1", kind: "number", icon: "archive", tone: "info" },
+      { label: "Total purchase value", value: "€255.05", kind: "money", icon: "money" },
+    ],
+    segments: [
+      { label: "All", count: 5 },
+      { label: "Active", count: 4, tone: "active" },
+      { label: "Replaced", count: 1, tone: "info" },
+    ],
+    filters: [
+      { label: "Vehicle", options: ["All vehicles", "FED-003", "FED-009", "FED-011"] },
+      { label: "Asset type", kind: "search", placeholder: "All types" },
+      { label: "Supplier", options: ["All suppliers", "ACP", "Tramanja"] },
+      { label: "Status", options: ["All statuses", "Active", "Replaced"] },
+    ],
+    columns: [
+      { key: "name", label: "Asset name" },
+      { key: "vehicle", label: "Vehicle", hideBelow: "sm" },
+      { key: "type", label: "Type", hideBelow: "md" },
+      { key: "serial", label: "Serial number", hideBelow: "md" },
+      { key: "purchased", label: "Purchase date", kind: "date", hideBelow: "lg" },
+      { key: "cost", label: "Purchase cost", kind: "money", align: "right" },
+      { key: "supplier", label: "Supplier", hideBelow: "lg" },
+      { key: "status", label: "Status" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "m3u",
+        segment: "Replaced",
+        cells: {
+          name: c("m3u"),
+          vehicle: c("FED-003", { link: true }),
+          type: c("—"),
+          serial: c("—"),
+          purchased: c("—"),
+          cost: c("€0.05"),
+          supplier: c("ACP", { link: true }),
+          status: c("Replaced", { badges: [{ label: "Replaced", tone: "info", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "gps",
+        segment: "Active",
+        cells: {
+          name: c("GPS tracker"),
+          vehicle: c("FED-003", { link: true }),
+          type: c("NAV"),
+          serial: c("56453erd", { chip: true }),
+          purchased: c("Jul 12, 2026"),
+          cost: c("€212.00"),
+          supplier: c("ACP", { link: true }),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "fire-1",
+        recordSlug: "asset",
+        segment: "Active",
+        cells: {
+          name: c("Fire extinguisher"),
+          vehicle: c("FED-003", { link: true }),
+          type: c("Safety"),
+          serial: c("687898kl", { chip: true }),
+          purchased: c("Feb 9, 2026"),
+          cost: c("€43.00"),
+          supplier: c("—"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "tythd",
+        segment: "Active",
+        cells: {
+          name: c("tythd"),
+          vehicle: c("FED-003", { link: true }),
+          type: c("—"),
+          serial: c("yufyuf", { chip: true }),
+          purchased: c("—"),
+          cost: c("—"),
+          supplier: c("—"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "fire-2",
+        segment: "Active",
+        cells: {
+          name: c("Fire extinguisher"),
+          vehicle: c("FED-009", { link: true }),
+          type: c("Safety"),
+          serial: c("2435678", { chip: true }),
+          purchased: c("—"),
+          cost: c("—"),
+          supplier: c("—"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+      },
+    ],
+  },
+  {
+    slug: "fines",
+    name: "Fines",
+    typeLabel: "Fine",
+    title: "Fines",
+    description: "Track traffic fines and contraventions across the fleet, matched to the driver on session.",
+    searchPlaceholder: "Search by contravention number or driver",
+    primaryAction: "Add fine",
+    uploadAction: "Attach notices",
+    stats: [
+      { label: "Outstanding fines", value: "1", kind: "number", icon: "gavel", tone: "warning" },
+      { label: "Outstanding amount", value: "€48.00", kind: "money", icon: "money", tone: "danger", highlight: true, hint: "Due in 6 days" },
+      { label: "Total fines", value: "3", kind: "number", icon: "file" },
+      { label: "Paid this year", value: "€59.00", kind: "money", icon: "check" },
+    ],
+    segments: [
+      { label: "All", count: 3 },
+      { label: "Outstanding", count: 1, tone: "warning" },
+      { label: "Paid", count: 2, tone: "active" },
+    ],
+    filters: [
+      { label: "Vehicle", options: ["All vehicles", "FED-003", "FED-009"] },
+      { label: "Driver", options: ["All drivers", "AA AA", "ttfh tufu"] },
+      { label: "Status", options: ["All statuses", "Outstanding", "Paid", "Appealed"] },
+      { label: "From date", kind: "date" },
+      { label: "To date", kind: "date" },
+    ],
+    columns: [
+      { key: "date", label: "Date", kind: "date", width: "9rem" },
+      { key: "vehicle", label: "Vehicle" },
+      { key: "driver", label: "Driver", hideBelow: "sm" },
+      { key: "contravention", label: "Contravention #", hideBelow: "md" },
+      { key: "amount", label: "Amount", kind: "money", align: "right" },
+      { key: "status", label: "Status" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "fine-1",
+        segment: "Outstanding",
+        cells: {
+          date: c("Aug 4, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          driver: c("AA AA", { link: true }),
+          contravention: c("45-567900-11", { chip: true }),
+          amount: c("€48.00"),
+          status: c("Outstanding", { badges: [{ label: "Outstanding", tone: "warning", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "fine-2",
+        segment: "Paid",
+        cells: {
+          date: c("Jul 21, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          driver: c("AA AA", { link: true }),
+          contravention: c("—"),
+          amount: c("€34.00"),
+          status: c("Paid", { badges: [{ label: "Paid", tone: "active", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "fine-3",
+        recordSlug: "fine",
+        segment: "Paid",
+        cells: {
+          date: c("Jul 18, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          driver: c("AA AA", { link: true }),
+          contravention: c("45-567655-09", { chip: true }),
+          amount: c("€25.00"),
+          status: c("Paid", { badges: [{ label: "Paid", tone: "active", variant: "outline" }] }),
+        },
+      },
+    ],
+  },
+  {
+    slug: "fuel",
+    name: "Fuel",
+    typeLabel: "Fuel entry",
+    title: "Fuel",
+    description: "Log fuel fill-ups and track fuel spend across the fleet.",
+    searchPlaceholder: "Search by receipt number or supplier",
+    primaryAction: "Add fuel",
+    uploadAction: "Attach receipts",
+    stats: [
+      { label: "Fuel spend (Aug 2026)", value: "€211.01", kind: "money", icon: "money" },
+      { label: "Fill-ups (Aug 2026)", value: "5", kind: "number", icon: "fuel", tone: "warning" },
+      { label: "Avg cost / fill-up", value: "€70.34", kind: "money", icon: "gauge", tone: "active" },
+      { label: "Missing receipt", value: "3", kind: "number", icon: "alert", tone: "warning", hint: "Chase drivers" },
+    ],
+    segments: [
+      { label: "All", count: 5 },
+      { label: "With receipt", count: 2, tone: "active" },
+      { label: "Missing receipt", count: 3, tone: "warning" },
+    ],
+    filters: [
+      { label: "Vehicle", options: ["All vehicles", "FED-003", "FED-009"] },
+      { label: "Supplier", options: ["All suppliers", "ACP", "Tramanja"] },
+      { label: "From date", kind: "date" },
+      { label: "To date", kind: "date" },
+    ],
+    columns: [
+      { key: "date", label: "Date", kind: "date", width: "9rem" },
+      { key: "vehicle", label: "Vehicle" },
+      { key: "amount", label: "Amount", kind: "money", align: "right" },
+      { key: "litres", label: "Litres", kind: "number", hideBelow: "sm" },
+      { key: "receipt", label: "Receipt #", hideBelow: "md" },
+      { key: "supplier", label: "Supplier", hideBelow: "md" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "fuel-1",
+        segment: "Missing receipt",
+        cells: {
+          date: c("Aug 9, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          amount: c("€0.07"),
+          litres: c("—"),
+          receipt: c("—"),
+          supplier: c("ACP", { link: true }),
+        },
+      },
+      {
+        id: "fuel-2",
+        segment: "Missing receipt",
+        cells: {
+          date: c("Aug 8, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          amount: c("€0.12"),
+          litres: c("—"),
+          receipt: c("—"),
+          supplier: c("ACP", { link: true }),
+        },
+      },
+      {
+        id: "fuel-3",
+        segment: "Missing receipt",
+        cells: {
+          date: c("Jul 27, 2026"),
+          vehicle: c("FED-009", { link: true }),
+          amount: c("€65.00"),
+          litres: c("0.05 L"),
+          receipt: c("—"),
+          supplier: c("ACP", { link: true }),
+        },
+      },
+      {
+        id: "fuel-4",
+        segment: "With receipt",
+        cells: {
+          date: c("Jul 27, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          amount: c("€101.01"),
+          litres: c("—"),
+          receipt: c("343434rr", { chip: true }),
+          supplier: c("ACP", { link: true }),
+        },
+      },
+      {
+        id: "fuel-5",
+        recordSlug: "fuel",
+        segment: "With receipt",
+        cells: {
+          date: c("Jul 27, 2026"),
+          vehicle: c("FED-003", { link: true }),
+          amount: c("€45.00"),
+          litres: c("20 L"),
+          receipt: c("56564t", { chip: true }),
+          supplier: c("ACP", { link: true }),
+        },
+      },
+    ],
+  },
+  {
+    slug: "licence-policy",
+    name: "Licence & Policy",
+    typeLabel: "Renewal",
+    title: "Licence & Policy",
+    description: "Track road licence, insurance and VRT renewals across the fleet.",
+    searchPlaceholder: "Search by vehicle or policy number",
+    primaryAction: "Add renewal",
+    uploadAction: "Attach documents",
+    stats: [
+      { label: "Expired", value: "1", kind: "number", icon: "x", tone: "danger", highlight: true, hint: "Past expiry" },
+      { label: "Expiring soon", value: "0", kind: "number", icon: "clock", tone: "warning", hint: "None expiring" },
+      { label: "Next renewal", value: "Aug 11, 2027", kind: "date", icon: "calendar", hint: "In 363 days" },
+      { label: "Annual cost", value: "€711.00", kind: "money", icon: "money" },
+    ],
+    segments: [
+      { label: "All", count: 2 },
+      { label: "Active", count: 1, tone: "active" },
+      { label: "Expired", count: 1, tone: "danger" },
+    ],
+    filters: [
+      { label: "Vehicle", options: ["All vehicles", "FED-003", "FED-009"] },
+      { label: "Date from", kind: "date" },
+      { label: "Date to", kind: "date" },
+    ],
+    columns: [
+      { key: "vehicle", label: "Vehicle", width: "9rem" },
+      { key: "renewal", label: "Renewal date", kind: "date" },
+      { key: "licence", label: "Licence", kind: "money", align: "right", hideBelow: "md" },
+      { key: "policy", label: "Policy", kind: "money", align: "right", hideBelow: "md" },
+      { key: "vrt", label: "VRT", kind: "money", align: "right", hideBelow: "lg" },
+      { key: "total", label: "Total", kind: "money", align: "right" },
+      { key: "status", label: "Status" },
+      { key: "paid", label: "Paid" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "lic-1",
+        recordSlug: "licence-policy",
+        segment: "Active",
+        cells: {
+          vehicle: c("FED-003", { link: true }),
+          renewal: c("Aug 11, 2026"),
+          licence: c("—"),
+          policy: c("—"),
+          vrt: c("—"),
+          total: c("€0.00"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+          paid: c("Unpaid", { badges: [{ label: "Unpaid", tone: "neutral", variant: "outline" }] }),
+        },
+      },
+      {
+        id: "lic-2",
+        segment: "Expired",
+        cells: {
+          vehicle: c("FED-009", { link: true }),
+          renewal: c("Jul 27, 2026"),
+          licence: c("€45.00"),
+          policy: c("€666.00"),
+          vrt: c("—"),
+          total: c("€711.00"),
+          status: c("Expired", { badges: [{ label: "Expired", tone: "danger", variant: "outline" }] }),
+          paid: c("Paid", { badges: [{ label: "Paid", tone: "active", variant: "outline" }] }),
+        },
+      },
+    ],
+  },
+  {
+    slug: "suppliers",
+    name: "Suppliers",
+    typeLabel: "Supplier",
+    title: "Suppliers",
+    description: "Companies used for repairs, maintenance, parts and services.",
+    searchPlaceholder: "Search by name…",
+    primaryAction: "Add supplier",
+    stats: [
+      { label: "Total suppliers", value: "3", kind: "number", icon: "building" },
+      { label: "Active", value: "3", kind: "number", icon: "check", tone: "active" },
+      { label: "Inactive", value: "0", kind: "number", icon: "ban" },
+      { label: "Spend this year", value: "€1,842.00", kind: "money", icon: "money" },
+    ],
+    segments: [
+      { label: "All", count: 3 },
+      { label: "Active", count: 3, tone: "active" },
+      { label: "Inactive", count: 0 },
+    ],
+    filters: [
+      { label: "Search", kind: "search", placeholder: "Search by name…" },
+      { label: "Type", options: ["All types", "Insurance", "Fuel supplier", "Parts supplier", "Repair garage", "Maintenance"] },
+      { label: "Status", options: ["All", "Active", "Inactive"] },
+    ],
+    columns: [
+      { key: "name", label: "Name", width: "12rem" },
+      { key: "types", label: "Types" },
+      { key: "contact", label: "Contact", hideBelow: "md" },
+      { key: "phone", label: "Phone", hideBelow: "md" },
+      { key: "email", label: "Email", hideBelow: "lg" },
+      { key: "status", label: "Status" },
+    ],
+    page: { current: 1, total: 1 },
+    selectable: false,
+    rows: [
+      {
+        id: "ABC Insurance",
+        segment: "Active",
+        cells: {
+          name: c("ABC Insurance", { link: true }),
+          types: c("", { tags: ["Insurance"] }),
+          contact: c("ABC INS"),
+          phone: c("99009988"),
+          email: c("—"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+        actions: [{ label: "Edit", icon: "pencil" }],
+      },
+      {
+        id: "ACP",
+        segment: "Active",
+        cells: {
+          name: c("ACP", { link: true }),
+          types: c("", { tags: ["Fuel supplier", "Parts supplier"] }),
+          contact: c("Fname surname"),
+          phone: c("999000999"),
+          email: c("—"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+        actions: [{ label: "Edit", icon: "pencil" }],
+      },
+      {
+        id: "Tramanja",
+        segment: "Active",
+        cells: {
+          name: c("Tramanja", { link: true }),
+          types: c("", { tags: ["Repair garage", "Maintenance", "Insurance"] }),
+          contact: c("Joe Meli"),
+          phone: c("99998880"),
+          email: c("—"),
+          status: c("Active", { badges: [{ label: "Active", tone: "active", variant: "outline" }] }),
+        },
+        actions: [{ label: "Edit", icon: "pencil" }],
+      },
+    ],
+  },
+  {
+    slug: "history-log",
+    name: "History Log",
+    typeLabel: "Event",
+    title: "History Log",
+    description: "Every action across the fleet — admin changes and driver activity, all in one timeline.",
+    searchPlaceholder: "Search by event, vehicle or actor",
+    primaryAction: "Export log",
+    stats: [
+      { label: "Events today", value: "14", kind: "number", icon: "activity" },
+      { label: "Admin actions", value: "11", kind: "number", icon: "shield", tone: "info" },
+      { label: "Driver actions", value: "3", kind: "number", icon: "users", tone: "active" },
+      { label: "Status changes", value: "9", kind: "number", icon: "clipboard" },
+    ],
+    segments: [
+      { label: "All", count: 8 },
+      { label: "Damage activity", count: 3, tone: "danger" },
+      { label: "Repair activity", count: 4, tone: "info" },
+      { label: "Session activity", count: 1, tone: "active" },
+    ],
+    filters: [
+      { label: "Vehicle", options: ["All vehicles", "FED-003", "FED-009"] },
+      { label: "Actor", options: ["All", "Admin", "Driver"] },
+      { label: "Source", options: ["All sources", "Damage activity", "Repair activity", "Issue activity", "Session activity"] },
+      { label: "From date", kind: "date" },
+      { label: "To date", kind: "date" },
+    ],
+    columns: [
+      { key: "datetime", label: "Date / time", width: "11rem" },
+      { key: "vehicle", label: "Vehicle", hideBelow: "sm" },
+      { key: "actor", label: "Actor" },
+      { key: "event", label: "Event" },
+      { key: "performedBy", label: "Performed by", hideBelow: "md" },
+      { key: "transition", label: "Status transition", hideBelow: "lg" },
+    ],
+    page: { current: 1, total: 6 },
+    selectable: false,
+    rows: [
+      {
+        id: "log-1",
+        recordSlug: "damage",
+        segment: "Damage activity",
+        cells: {
+          datetime: c("10 Aug 2026, 17:04"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Damage status: pending_approval → approved", { sub: "Damage activity" }),
+          performedBy: c("admin@fleetguard.com"),
+          transition: c("pending_approval → approved"),
+        },
+      },
+      {
+        id: "log-2",
+        segment: "Damage activity",
+        cells: {
+          datetime: c("10 Aug 2026, 17:04"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Damage status: approved → pending_approval", { sub: "Damage activity" }),
+          performedBy: c("admin@fleetguard.com"),
+          transition: c("approved → pending_approval"),
+        },
+      },
+      {
+        id: "log-3",
+        recordSlug: "repair",
+        segment: "Repair activity",
+        cells: {
+          datetime: c("10 Aug 2026, 17:03"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Repair status: scheduled → being_repaired", { sub: "Repair activity" }),
+          performedBy: c("admin@fleetguard.com"),
+          transition: c("scheduled → being_repaired"),
+        },
+      },
+      {
+        id: "log-4",
+        segment: "Repair activity",
+        cells: {
+          datetime: c("10 Aug 2026, 17:03"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Repair status: to_repair → scheduled", { sub: "Repair activity" }),
+          performedBy: c("admin@fleetguard.com"),
+          transition: c("to_repair → scheduled"),
+        },
+      },
+      {
+        id: "log-5",
+        segment: "Repair activity",
+        cells: {
+          datetime: c("10 Aug 2026, 17:02"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Repair status: — → to_repair", { sub: "Repair activity" }),
+          performedBy: c("—"),
+          transition: c("— → to_repair"),
+        },
+      },
+      {
+        id: "log-6",
+        segment: "Repair activity",
+        cells: {
+          datetime: c("07 Aug 2026, 16:35"),
+          vehicle: c("FED-009", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Repair status: scheduled → being_repaired", { sub: "Repair activity" }),
+          performedBy: c("admin@fleetguard.com"),
+          transition: c("scheduled → being_repaired"),
+        },
+      },
+      {
+        id: "log-7",
+        segment: "Damage activity",
+        cells: {
+          datetime: c("06 Aug 2026, 22:56"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Admin", { badges: [{ label: "Admin", tone: "info", variant: "outline" }] }),
+          event: c("Damage status: pending_approval → approved", { sub: "Damage activity" }),
+          performedBy: c("admin@fleetguard.com"),
+          transition: c("pending_approval → approved"),
+        },
+      },
+      {
+        id: "log-8",
+        recordSlug: "session",
+        segment: "Session activity",
+        cells: {
+          datetime: c("06 Aug 2026, 22:54"),
+          vehicle: c("FED-003", { link: true }),
+          actor: c("Driver", { badges: [{ label: "Driver", tone: "active", variant: "outline" }] }),
+          event: c("Session ended by AA AA", { sub: "Session activity" }),
+          performedBy: c("AA AA"),
+          transition: c("—"),
         },
       },
     ],
