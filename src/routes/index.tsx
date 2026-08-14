@@ -56,6 +56,32 @@ function Index() {
       </header>
 
       <section className="mt-10">
+        <h2 className="label-micro">Admin dashboard</h2>
+        <div className="mt-4">
+          <Link
+            to="/dashboard"
+            className="group block rounded-xl border border-hairline bg-surface p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-primary/40"
+          >
+            <span className="label-micro">Overview</span>
+            <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">
+              Fleet control room
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              KPIs, approval queues, workshop pipeline, fleet status board, spend trend, compliance
+              expiries, driver activity and audit feed.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+              Open dashboard
+              <ArrowRight
+                className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                aria-hidden
+              />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      <section className="mt-12">
         <h2 className="label-micro">Record types</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {records.map((record) => (
