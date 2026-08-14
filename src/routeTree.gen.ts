@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ListsListRouteImport } from './routes/lists.$list'
 import { Route as RecordsTypeRouteImport } from './routes/records.$type'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListsListRoute = ListsListRouteImport.update({
@@ -31,30 +37,34 @@ const RecordsTypeRoute = RecordsTypeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/lists/$list' | '/records/$type'
+  fullPaths: '/' | '/dashboard' | '/lists/$list' | '/records/$type'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/lists/$list' | '/records/$type'
-  id: '__root__' | '/' | '/lists/$list' | '/records/$type'
+  to: '/' | '/dashboard' | '/lists/$list' | '/records/$type'
+  id: '__root__' | '/' | '/dashboard' | '/lists/$list' | '/records/$type'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRoute
   ListsListRoute: typeof ListsListRoute
   RecordsTypeRoute: typeof RecordsTypeRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lists/$list': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRoute,
   ListsListRoute: ListsListRoute,
   RecordsTypeRoute: RecordsTypeRoute,
 }
