@@ -19,7 +19,7 @@ export function InspectionBlueprint({
   vehicleReg,
 }: {
   config: RecordBlueprint;
-  vehicleReg?: string;
+  vehicleReg?: string | undefined;
 }) {
   const blueprint = useMemo(() => getBlueprint(vehicleReg), [vehicleReg]);
   const reports = useMemo(() => getVehicleDamageReports(vehicleReg), [vehicleReg]);

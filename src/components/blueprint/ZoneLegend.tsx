@@ -12,7 +12,7 @@ export function ZoneLegend({
   kinds,
   className,
 }: {
-  kinds?: MarkerKind[];
+  kinds?: MarkerKind[] | undefined;
   className?: string | undefined;
 }) {
   const items = kinds?.length ? legend.filter((item) => kinds.includes(item.kind)) : legend;

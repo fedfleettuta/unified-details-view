@@ -14,7 +14,7 @@ export function EvidencePanel({
   vehicleReg,
 }: {
   evidence: RecordEvidence;
-  vehicleReg?: string;
+  vehicleReg?: string | undefined;
 }) {
   const blueprint = useMemo(() => getBlueprint(vehicleReg), [vehicleReg]);
   const reports = useMemo(() => getVehicleDamageReports(vehicleReg), [vehicleReg]);
