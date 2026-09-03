@@ -1206,6 +1206,7 @@ export const records: RecordConfig[] = [
       views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
       activeView: "Front",
       marker: { x: 34, y: 62, label: "Front bumper — left" },
+      reportId: "dmg-4471",
       hint: "Tap the blueprint to drop a damage marker.",
       photosTitle: "Driver photos",
       photos: [
@@ -1331,6 +1332,7 @@ export const records: RecordConfig[] = [
       views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
       activeView: "Front",
       marker: { x: 34, y: 62, label: "Front bumper — left" },
+      reportId: "dmg-4471",
       hint: "Read-only view carried over from the source damage record.",
       photosTitle: "Before & after photos",
       photos: [
@@ -1451,6 +1453,7 @@ export const records: RecordConfig[] = [
       views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
       activeView: "Front",
       marker: { x: 46, y: 66, label: "Awaiting approval" },
+      reportId: "fed003-016",
       hint: "Tap the blueprint to drop a damage marker.",
       photosTitle: "Driver photos",
       photos: [
