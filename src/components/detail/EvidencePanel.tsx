@@ -1,78 +1,106 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Camera, MapPin } from "lucide-react";
 
 import { Panel, PanelHeader } from "./Panel";
 import { StatusPill } from "./StatusPill";
-import { cn } from "@/lib/utils";
+import { VehicleBlueprint } from "@/components/blueprint/VehicleBlueprint";
+import { ZoneLegend } from "@/components/blueprint/ZoneLegend";
+import { getBlueprint, type BlueprintMarker, type ZoneSelection } from "@/data/blueprints";
+import { getVehicleDamageReports, toMarker } from "@/data/damage-reports";
 import type { RecordEvidence } from "@/data/records";
 
-export function EvidencePanel({ evidence }: { evidence: RecordEvidence }) {
-  const [view, setView] = useState(evidence.activeView);
-  const showMarker = evidence.marker && view === evidence.activeView;
+export function EvidencePanel({
+  evidence,
+  vehicleReg,
+}: {
+  evidence: RecordEvidence;
+  vehicleReg?: string;
+}) {
+  const blueprint = useMemo(() => getBlueprint(vehicleReg), [vehicleReg]);
+  const reports = useMemo(() => getVehicleDamageReports(vehicleReg), [vehicleReg]);
+  const focus = reports.find((report) => report.id === evidence.reportId);
+
+  const [view, setView] = useState(focus?.view ?? evidence.activeView);
+  const [selection, setSelection] = useState<ZoneSelection | null>(null);
+
+  const markers = useMemo<BlueprintMarker[]>(() => {
+    if (reports.length) {
+      return reports.map((report) =>
+        toMarker(report, report.id === focus?.id ? report.kind : "existing"),
+      );
+    }
+    if (!evidence.marker) return [];
+    const fallbackView = getBlueprint(vehicleReg).views[0]!;
+    return [
+      {
+        id: "legacy-marker",
+        view: evidence.activeView,
+        zoneId: fallbackView.zones[0]!.id,
+        position: { x: evidence.marker.x / 100, y: evidence.marker.y / 100 },
+        label: evidence.marker.label,
+        kind: "session",
+      },
+    ];
+  }, [evidence.activeView, evidence.marker, focus?.id, reports, vehicleReg]);
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
       <Panel>
-        <PanelHeader title={evidence.title} icon={<MapPin className="h-4 w-4" />} />
+        <PanelHeader
+          title={evidence.title}
+          icon={<MapPin className="h-4 w-4" />}
+          action={<ZoneLegend className="hidden sm:flex" />}
+        />
 
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {evidence.views.map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => setView(option)}
-              aria-pressed={view === option}
-              className={cn(
-                "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-                view === option
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-surface-muted text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
+        <VehicleBlueprint
+          className="mt-4"
+          blueprint={blueprint}
+          view={view}
+          onViewChange={(next) => {
+            setView(next);
+            setSelection(null);
+          }}
+          markers={markers}
+          selectedZoneId={selection?.zoneId ?? (view === focus?.view ? focus?.zoneId : undefined)}
+          selectedPoint={selection?.position}
+          highlightMarkerId={focus?.id}
+          onZoneSelect={setSelection}
+          hint={evidence.hint}
+        />
 
-        <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-lg border border-hairline bg-surface-muted/50">
-          <div
-            className="absolute inset-0 opacity-60"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, color-mix(in oklab, currentColor 8%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, currentColor 8%, transparent) 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
-            aria-hidden
-          />
-          <span className="absolute top-3 left-3 label-micro">
-            {view} · {evidence.blueprintLabel}
-          </span>
-          {showMarker && evidence.marker ? (
-            <span
-              className="absolute -translate-x-1/2 -translate-y-1/2"
-              style={{ left: `${evidence.marker.x}%`, top: `${evidence.marker.y}%` }}
-            >
-              <span className="relative flex h-6 w-6 items-center justify-center">
-                <span className="absolute inset-0 animate-ping rounded-full bg-danger/30" aria-hidden />
-                <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-danger text-[11px] font-bold text-surface shadow-panel">
-                  !
-                </span>
-              </span>
-              <span className="mt-1 block -translate-x-1/2 rounded-md bg-surface px-2 py-0.5 text-[11px] font-medium whitespace-nowrap shadow-panel">
-                {evidence.marker.label}
-              </span>
-            </span>
-          ) : (
-            <span className="absolute inset-x-0 bottom-4 text-center text-xs text-muted-foreground">
-              No marker on this view
-            </span>
-          )}
-        </div>
-
-        {evidence.hint ? (
-          <p className="mt-3 text-xs text-muted-foreground">{evidence.hint}</p>
-        ) : null}
+        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-hairline pt-4 sm:grid-cols-4">
+          <div>
+            <dt className="label-micro">View</dt>
+            <dd className="text-sm font-medium">{selection?.view ?? focus?.view ?? view}</dd>
+          </div>
+          <div>
+            <dt className="label-micro">Zone</dt>
+            <dd className="text-sm font-medium">
+              {selection?.zoneName ??
+                blueprint.views
+                  .flatMap((v) => v.zones)
+                  .find((z) => z.id === focus?.zoneId)?.name ??
+                "—"}
+            </dd>
+          </div>
+          <div>
+            <dt className="label-micro">Zone id</dt>
+            <dd className="font-mono text-xs text-muted-foreground">
+              {selection?.zoneId ?? focus?.zoneId ?? "—"}
+            </dd>
+          </div>
+          <div>
+            <dt className="label-micro">Position</dt>
+            <dd className="num font-mono text-xs text-muted-foreground">
+              {(() => {
+                const point = selection?.position ?? focus?.position;
+                return point ? `x ${point.x.toFixed(3)} · y ${point.y.toFixed(3)}` : "—";
+              })()}
+            </dd>
+          </div>
+        </dl>
       </Panel>
+
 
       <Panel>
         <PanelHeader
