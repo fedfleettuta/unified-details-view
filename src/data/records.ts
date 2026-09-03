@@ -226,6 +226,7 @@ export interface RecordConfig {
   inspections?: RecordInspections;
   damageReports?: RecordDamageReports;
   evidence?: RecordEvidence;
+  blueprint?: RecordBlueprint;
   decision?: RecordDecision;
   activity?: RecordActivity;
   primaryAction?: string;

@@ -13,6 +13,7 @@ import { ComplianceStrip } from "./ComplianceStrip";
 import { RelatedLists } from "./RelatedLists";
 import { InspectionPanels } from "./InspectionPanels";
 import { DamageReportPanels } from "./DamageReportPanels";
+import { InspectionBlueprint } from "@/components/blueprint/InspectionBlueprint";
 import { EvidencePanel } from "./EvidencePanel";
 import { DecisionCallout } from "./DecisionCallout";
 import { StatusTimeline } from "./StatusTimeline";
@@ -123,7 +124,13 @@ export function RecordDetail({ record }: { record: RecordConfig }) {
 
           <DetailsPanel groups={record.groups} recordTitle={record.typeLabel} />
 
-          {record.evidence ? <EvidencePanel evidence={record.evidence} /> : null}
+          {record.evidence ? (
+            <EvidencePanel evidence={record.evidence} vehicleReg={record.vehicle?.reg} />
+          ) : null}
+
+          {record.blueprint ? (
+            <InspectionBlueprint config={record.blueprint} vehicleReg={record.vehicle?.reg} />
+          ) : null}
 
           {record.inspections ? <InspectionPanels inspections={record.inspections} /> : null}
 
