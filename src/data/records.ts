@@ -117,6 +117,8 @@ export interface RecordEvidence {
   activeView: string;
   /** Marker position on the schematic, in percent of the frame. */
   marker?: { x: number; y: number; label: string };
+  /** Damage report this evidence belongs to; drives shared blueprint markers. */
+  reportId?: string;
   hint?: string;
   photosTitle: string;
   photos: EvidencePhoto[];
@@ -124,6 +126,26 @@ export interface RecordEvidence {
   /** Per-photo moderation actions, e.g. ["Unapprove", "Delete"]. */
   photoActions?: string[];
 }
+
+/** Shared blueprint/zone surface: Start Vehicle, Return Vehicle, Admin blueprint. */
+export interface RecordBlueprint {
+  title: string;
+  note?: string;
+  hint?: string;
+  /** Which blueprint view opens first, e.g. "Front". */
+  activeView?: string;
+  legendKinds?: Array<"existing" | "session" | "pending" | "repaired">;
+  phases: Array<{
+    id: string;
+    label: string;
+    /** "pre-trip" | "return" | "spot-check" highlight this phase; "all" shows everything. */
+    phase?: "pre-trip" | "return" | "spot-check" | "all";
+    sessionRef?: string;
+    note?: string;
+    readOnly?: boolean;
+  }>;
+}
+
 
 export interface RecordDecision {
   tone: Extract<StatusTone, "warning" | "info" | "active" | "danger">;
@@ -204,6 +226,7 @@ export interface RecordConfig {
   inspections?: RecordInspections;
   damageReports?: RecordDamageReports;
   evidence?: RecordEvidence;
+  blueprint?: RecordBlueprint;
   decision?: RecordDecision;
   activity?: RecordActivity;
   primaryAction?: string;
@@ -286,6 +309,13 @@ export const records: RecordConfig[] = [
         { label: "Elapsed", value: "6h 12m" },
         { label: "Issues raised", value: "1", kind: "number", tone: "warning" },
       ],
+    },
+    blueprint: {
+      title: "Vehicle blueprint",
+      note: "Admin view of every zone and every damage report on this vehicle.",
+      hint: "Select a zone to capture view, zone id and precise position for a new report.",
+      activeView: "Front",
+      phases: [{ id: "all", label: "All damage", phase: "all" }],
     },
     metrics: {
       title: "Running costs",
@@ -790,6 +820,29 @@ export const records: RecordConfig[] = [
         },
       ],
     },
+    blueprint: {
+      title: "Inspection blueprint",
+      note: "Same vehicle geometry as the Start Vehicle and Return Vehicle screens.",
+      hint: "Select a zone to see its id and precise position; markers come from driver damage reports.",
+      activeView: "Front",
+      phases: [
+        {
+          id: "pre-trip",
+          label: "Start vehicle (pre-trip)",
+          phase: "pre-trip",
+          sessionRef: "SES-0007",
+          note: "Damage the driver marked before driving away.",
+        },
+        {
+          id: "return",
+          label: "Return vehicle",
+          phase: "return",
+          sessionRef: "SES-0007",
+          note: "New damage marked at return, compared against the pre-trip state.",
+        },
+        { id: "all", label: "All recorded damage", phase: "all", readOnly: true },
+      ],
+    },
     related: [
       {
         title: "Issues raised in this session",
@@ -1184,6 +1237,7 @@ export const records: RecordConfig[] = [
       views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
       activeView: "Front",
       marker: { x: 34, y: 62, label: "Front bumper — left" },
+      reportId: "dmg-4471",
       hint: "Tap the blueprint to drop a damage marker.",
       photosTitle: "Driver photos",
       photos: [
@@ -1309,6 +1363,7 @@ export const records: RecordConfig[] = [
       views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
       activeView: "Front",
       marker: { x: 34, y: 62, label: "Front bumper — left" },
+      reportId: "dmg-4471",
       hint: "Read-only view carried over from the source damage record.",
       photosTitle: "Before & after photos",
       photos: [
@@ -1429,6 +1484,7 @@ export const records: RecordConfig[] = [
       views: ["Front", "Rear", "Left", "Right", "Roof", "Interior"],
       activeView: "Front",
       marker: { x: 46, y: 66, label: "Awaiting approval" },
+      reportId: "fed003-016",
       hint: "Tap the blueprint to drop a damage marker.",
       photosTitle: "Driver photos",
       photos: [
