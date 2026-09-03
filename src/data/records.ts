@@ -310,6 +310,13 @@ export const records: RecordConfig[] = [
         { label: "Issues raised", value: "1", kind: "number", tone: "warning" },
       ],
     },
+    blueprint: {
+      title: "Vehicle blueprint",
+      note: "Admin view of every zone and every damage report on this vehicle.",
+      hint: "Select a zone to capture view, zone id and precise position for a new report.",
+      activeView: "Front",
+      phases: [{ id: "all", label: "All damage", phase: "all" }],
+    },
     metrics: {
       title: "Running costs",
       note: "Last 90 days",
@@ -811,6 +818,29 @@ export const records: RecordConfig[] = [
             },
           ],
         },
+      ],
+    },
+    blueprint: {
+      title: "Inspection blueprint",
+      note: "Same vehicle geometry as the Start Vehicle and Return Vehicle screens.",
+      hint: "Select a zone to see its id and precise position; markers come from driver damage reports.",
+      activeView: "Front",
+      phases: [
+        {
+          id: "pre-trip",
+          label: "Start vehicle (pre-trip)",
+          phase: "pre-trip",
+          sessionRef: "SES-0007",
+          note: "Damage the driver marked before driving away.",
+        },
+        {
+          id: "return",
+          label: "Return vehicle",
+          phase: "return",
+          sessionRef: "SES-0007",
+          note: "New damage marked at return, compared against the pre-trip state.",
+        },
+        { id: "all", label: "All recorded damage", phase: "all", readOnly: true },
       ],
     },
     related: [
