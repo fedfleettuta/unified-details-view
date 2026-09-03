@@ -117,6 +117,8 @@ export interface RecordEvidence {
   activeView: string;
   /** Marker position on the schematic, in percent of the frame. */
   marker?: { x: number; y: number; label: string };
+  /** Damage report this evidence belongs to; drives shared blueprint markers. */
+  reportId?: string;
   hint?: string;
   photosTitle: string;
   photos: EvidencePhoto[];
@@ -124,6 +126,26 @@ export interface RecordEvidence {
   /** Per-photo moderation actions, e.g. ["Unapprove", "Delete"]. */
   photoActions?: string[];
 }
+
+/** Shared blueprint/zone surface: Start Vehicle, Return Vehicle, Admin blueprint. */
+export interface RecordBlueprint {
+  title: string;
+  note?: string;
+  hint?: string;
+  /** Which blueprint view opens first, e.g. "Front". */
+  activeView?: string;
+  legendKinds?: Array<"existing" | "session" | "pending" | "repaired">;
+  phases: Array<{
+    id: string;
+    label: string;
+    /** "pre-trip" | "return" | "spot-check" highlight this phase; "all" shows everything. */
+    phase?: "pre-trip" | "return" | "spot-check" | "all";
+    sessionRef?: string;
+    note?: string;
+    readOnly?: boolean;
+  }>;
+}
+
 
 export interface RecordDecision {
   tone: Extract<StatusTone, "warning" | "info" | "active" | "danger">;
