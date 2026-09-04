@@ -207,3 +207,9 @@ export function zoneCentroid(zone: BlueprintZone): BlueprintPoint {
 export function zoneAtPoint(blueprint: VehicleBlueprint, view: string, point: BlueprintPoint) {
   return getBlueprintView(blueprint, view).zones.find((zone) => isPointInZone(point, zone));
 }
+
+/** Vehicles that have a blueprint definition, for admin pickers. */
+export const blueprintVehicles = blueprints.map((b) => ({
+  vehicleReg: b.vehicleReg,
+  model: b.model,
+}));
