@@ -5,7 +5,8 @@ import { Panel, PanelHeader } from "@/components/detail/Panel";
 import { VehicleBlueprint } from "./VehicleBlueprint";
 import { ZoneLegend } from "./ZoneLegend";
 import { cn } from "@/lib/utils";
-import { getBlueprint, type BlueprintMarker, type ZoneSelection } from "@/data/blueprints";
+import type { BlueprintMarker, ZoneSelection } from "@/data/blueprints";
+import { useVehicleBlueprint } from "@/data/blueprint-store";
 import { getVehicleDamageReports, toMarker } from "@/data/damage-reports";
 import type { RecordBlueprint } from "@/data/records";
 
@@ -21,7 +22,7 @@ export function InspectionBlueprint({
   config: RecordBlueprint;
   vehicleReg?: string | undefined;
 }) {
-  const blueprint = useMemo(() => getBlueprint(vehicleReg), [vehicleReg]);
+  const blueprint = useVehicleBlueprint(vehicleReg);
   const reports = useMemo(() => getVehicleDamageReports(vehicleReg), [vehicleReg]);
 
   const [phaseId, setPhaseId] = useState(config.phases[0]?.id ?? "all");

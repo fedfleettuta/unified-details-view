@@ -56,8 +56,9 @@ function Index() {
       </header>
 
       <section className="mt-10">
-        <h2 className="label-micro">Admin dashboard</h2>
-        <div className="mt-4">
+        <h2 className="label-micro">Admin tools</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+
           <Link
             to="/dashboard"
             className="group block rounded-xl border border-hairline bg-surface p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-primary/40"
@@ -78,6 +79,27 @@ function Index() {
               />
             </span>
           </Link>
+          <Link
+            to="/blueprint-editor"
+            className="group block rounded-xl border border-hairline bg-surface p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-primary/40"
+          >
+            <span className="label-micro">Blueprints</span>
+            <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">
+              Vehicle blueprint editor
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Upload a real vehicle image per view, draw polygon damage zones and save them for the
+              Start Vehicle and Return Vehicle inspections.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+              Open editor
+              <ArrowRight
+                className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                aria-hidden
+              />
+            </span>
+          </Link>
+
         </div>
       </section>
 
