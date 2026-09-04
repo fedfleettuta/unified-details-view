@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlueprintEditorRouteImport } from './routes/blueprint-editor'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ListsListRouteImport } from './routes/lists.$list'
 import { Route as RecordsTypeRouteImport } from './routes/records.$type'
@@ -17,6 +18,11 @@ import { Route as RecordsTypeRouteImport } from './routes/records.$type'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlueprintEditorRoute = BlueprintEditorRouteImport.update({
+  id: '/blueprint-editor',
+  path: '/blueprint-editor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -37,12 +43,14 @@ const RecordsTypeRoute = RecordsTypeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blueprint-editor': typeof BlueprintEditorRoute
   '/dashboard': typeof DashboardRoute
   '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blueprint-editor': typeof BlueprintEditorRoute
   '/dashboard': typeof DashboardRoute
   '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
@@ -50,20 +58,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blueprint-editor': typeof BlueprintEditorRoute
   '/dashboard': typeof DashboardRoute
   '/lists/$list': typeof ListsListRoute
   '/records/$type': typeof RecordsTypeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/lists/$list' | '/records/$type'
+  fullPaths:
+    '/' | '/blueprint-editor' | '/dashboard' | '/lists/$list' | '/records/$type'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/lists/$list' | '/records/$type'
-  id: '__root__' | '/' | '/dashboard' | '/lists/$list' | '/records/$type'
+  to:
+    '/' | '/blueprint-editor' | '/dashboard' | '/lists/$list' | '/records/$type'
+  id:
+    | '__root__'
+    | '/'
+    | '/blueprint-editor'
+    | '/dashboard'
+    | '/lists/$list'
+    | '/records/$type'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlueprintEditorRoute: typeof BlueprintEditorRoute
   DashboardRoute: typeof DashboardRoute
   ListsListRoute: typeof ListsListRoute
   RecordsTypeRoute: typeof RecordsTypeRoute
@@ -76,6 +94,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blueprint-editor': {
+      id: '/blueprint-editor'
+      path: '/blueprint-editor'
+      fullPath: '/blueprint-editor'
+      preLoaderRoute: typeof BlueprintEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -104,6 +129,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlueprintEditorRoute: BlueprintEditorRoute,
   DashboardRoute: DashboardRoute,
   ListsListRoute: ListsListRoute,
   RecordsTypeRoute: RecordsTypeRoute,

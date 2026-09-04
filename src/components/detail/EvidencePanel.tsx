@@ -5,7 +5,8 @@ import { Panel, PanelHeader } from "./Panel";
 import { StatusPill } from "./StatusPill";
 import { VehicleBlueprint } from "@/components/blueprint/VehicleBlueprint";
 import { ZoneLegend } from "@/components/blueprint/ZoneLegend";
-import { getBlueprint, type BlueprintMarker, type ZoneSelection } from "@/data/blueprints";
+import type { BlueprintMarker, ZoneSelection } from "@/data/blueprints";
+import { useVehicleBlueprint } from "@/data/blueprint-store";
 import { getVehicleDamageReports, toMarker } from "@/data/damage-reports";
 import type { RecordEvidence } from "@/data/records";
 
@@ -16,7 +17,7 @@ export function EvidencePanel({
   evidence: RecordEvidence;
   vehicleReg?: string | undefined;
 }) {
-  const blueprint = useMemo(() => getBlueprint(vehicleReg), [vehicleReg]);
+  const blueprint = useVehicleBlueprint(vehicleReg);
   const reports = useMemo(() => getVehicleDamageReports(vehicleReg), [vehicleReg]);
   const focus = reports.find((report) => report.id === evidence.reportId);
 
@@ -30,7 +31,7 @@ export function EvidencePanel({
       );
     }
     if (!evidence.marker) return [];
-    const fallbackView = getBlueprint(vehicleReg).views[0]!;
+    const fallbackView = blueprint.views[0]!;
     return [
       {
         id: "legacy-marker",
@@ -41,7 +42,7 @@ export function EvidencePanel({
         kind: "session",
       },
     ];
-  }, [evidence.activeView, evidence.marker, focus?.id, reports, vehicleReg]);
+  }, [blueprint, evidence.activeView, evidence.marker, focus?.id, reports]);
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
