@@ -56,8 +56,9 @@ function Index() {
       </header>
 
       <section className="mt-10">
-        <h2 className="label-micro">Admin dashboard</h2>
-        <div className="mt-4">
+        <h2 className="label-micro">Admin tools</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+
           <Link
             to="/dashboard"
             className="group block rounded-xl border border-hairline bg-surface p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-primary/40"
