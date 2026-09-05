@@ -110,10 +110,11 @@ export function mergeBlueprint(
 /** The blueprint every flow should render: static geometry + admin overrides. */
 export function useVehicleBlueprint(vehicleReg?: string): VehicleBlueprint {
   const [version, setVersion] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const unsubscribe = subscribeBlueprints(() => setVersion((v) => v + 1));
-    setVersion((v) => v + 1); // pick up localStorage after hydration
+    setHydrated(true); // apply saved overrides only after hydration
     return () => {
       unsubscribe();
     };
@@ -121,10 +122,10 @@ export function useVehicleBlueprint(vehicleReg?: string): VehicleBlueprint {
 
   return useMemo(() => {
     const base = getBlueprint(vehicleReg);
-    if (typeof window === "undefined") return base;
+    if (!hydrated || typeof window === "undefined") return base;
     return mergeBlueprint(base, getBlueprintOverride(vehicleReg));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vehicleReg, version]);
+  }, [vehicleReg, hydrated, version]);
 }
 
 /** Whether a vehicle/view currently has saved admin edits. */
