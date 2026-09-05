@@ -114,8 +114,10 @@ export function useVehicleBlueprint(vehicleReg?: string): VehicleBlueprint {
 
   useEffect(() => {
     const unsubscribe = subscribeBlueprints(() => setVersion((v) => v + 1));
-    setHydrated(true); // apply saved overrides only after hydration
+    // Apply saved overrides one tick after hydration so SSR markup matches.
+    const timer = window.setTimeout(() => setHydrated(true), 0);
     return () => {
+      window.clearTimeout(timer);
       unsubscribe();
     };
   }, []);
